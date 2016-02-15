@@ -1,4 +1,4 @@
-This is a branch for the Warehouse Management Graphical Display part of the project.
+This is a branch for the Robot Interface part of the project.
 
 You should work on your code here until you are sure that you have finished it.
 
