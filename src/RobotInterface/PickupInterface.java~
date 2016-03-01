@@ -25,19 +25,19 @@ public class PickupInterface extends Thread {
 	}
 	
 	public void run() {
-		int x = LCD.CELL_WIDTH / 4;
-		int y = LCD.CELL_HEIGHT / 2;
+		int x = LCD.SCREEN_WIDTH / 4;
+		int y = LCD.SCREEN_HEIGHT / 2;
 		LCD.drawString("I need " + quantity + "x " + id + ".", x, y);
 		int i = quantity;
 		int pressed;
 		while(i > 0) {
 			pressed = Button.waitForAnyPress();
 			LCD.clear();
-			if(pressed == Button.ID_ENTER) {
+			if(pressed = Button.ID_ENTER) {
 				i--;
 			}
 			else {
-				LCD.drawString("Press the enter button to add an item", x, y+2);
+				LCD.drawString("Press the enter button to add an item");
 				Delay.msDelay(2000);
 				LCD.clear();
 			}
@@ -53,4 +53,3 @@ public class PickupInterface extends Thread {
 		p.start();
 	}
 }
-

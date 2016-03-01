@@ -28,7 +28,7 @@ public class DropoffInterface extends Thread {
 		LCD.drawString("3x ab", 2, 3); 	//testing
 		LCD.drawString("5x ac", 2, 4);	//testing
 		int y = 5;						//testing
-		LCD.drawString("Press ENTER to drop these items off.", x, y);
+		LCD.drawString("Press ENTER to drop these items off.", 2, y);
 		int pressed = Button.waitForAnyPress();
 		while(pressed != Button.ID_ENTER) {
 			pressed = Button.waitForAnyPress();
