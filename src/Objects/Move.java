@@ -1,0 +1,47 @@
+package Objects;
+
+import java.awt.Point;
+
+public class Move {
+
+	private char direction;
+	private Point nextLocation;
+
+
+	public Move(char direction, Point nextLocation) {
+		this.direction = direction;
+		this.nextLocation = nextLocation;
+	}
+
+
+	/**
+	 * Get the direction.
+	 * @return The direction.
+	 */public char getDirection() {
+		 return direction;
+	 }
+
+	 /**
+	  * Get the next location.
+	  * @return The next location.
+	  */
+	 public Point getNextLocation() {
+		 return nextLocation;
+	 }
+
+	 // toString method for debugging purposes
+	 @Override
+	 public String toString() {
+		 return "Move [direction=" + direction + ", nextLocation=" + nextLocation + "]";
+	 }
+
+
+	 /**
+	  * Gets the parameters in csv format
+	  * @return all parameters, seperated by commas
+	  */
+	 public String parameters() {
+		 return (direction+","+(int)nextLocation.getX() + "," + (int)nextLocation.getY());
+	 }
+
+}
