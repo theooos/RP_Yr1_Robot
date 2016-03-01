@@ -24,30 +24,30 @@ public class PickupInterface extends Thread {
 		this.quantity = 5;
 	}
 	
-	public void run() {
+	public void run() { //will get started by Theo when in location
 		int x = LCD.CELL_WIDTH / 4;
 		int y = LCD.CELL_HEIGHT / 2;
-		LCD.drawString("I need " + quantity + "x " + id + ".", x, y);
+		LCD.drawString("I need " + quantity + "x " + id + ".", x, y); //Output message
 		int i = quantity;
 		int pressed;
 		while(i > 0) {
-			pressed = Button.waitForAnyPress();
-			LCD.clear();
-			if(pressed == Button.ID_ENTER) {
-				i--;
+			pressed = Button.waitForAnyPress(); //wait for button to be pressed and store which it is
+			LCD.clear();						
+			if(pressed == Button.ID_ENTER) { //if it is the enter button
+				i--; //decrease the number needed
 			}
-			else {
+			else { //otherwise
 				LCD.drawString("Press the enter button to add an item", x, y+2);
-				Delay.msDelay(2000);
-				LCD.clear();
+				Delay.msDelay(2000); //display warning message
+				LCD.clear(); 
 			}
-			LCD.drawString("I need " + i + "x " + id + ".", x, y);
+			LCD.drawString("I need " + i + "x " + id + ".", x, y); //Update on screen how many needed
 		}
 		LCD.clear();
 		//CompleteReport report = new CompleteReport(true, true);
 	}
 	
-	public static void main(String[] args) {
+	public static void main(String[] args) { //Used entirely for testing my code on a robot
 		Button.waitForAnyPress();
 		PickupInterface p = new PickupInterface();
 		p.start();

@@ -25,18 +25,18 @@ public class DropoffInterface extends Thread {
 			y++;
 		}*/
 		LCD.drawString("4x aa", 2, 2); 	//testing
-		LCD.drawString("3x ab", 2, 3); 	//testing
+		LCD.drawString("3x ab", 2, 3); 	//testing	<-display what the robot is holding
 		LCD.drawString("5x ac", 2, 4);	//testing
 		int y = 5;						//testing
-		LCD.drawString("Press ENTER to drop these items off.", 2, y);
-		int pressed = Button.waitForAnyPress();
-		while(pressed != Button.ID_ENTER) {
-			pressed = Button.waitForAnyPress();
+		LCD.drawString("Press ENTER", 2, y);  //Display instructions
+		int pressed = Button.waitForAnyPress(); //Record the pressed button
+		while(pressed != Button.ID_ENTER) {		//if it isn't enter
+			pressed = Button.waitForAnyPress();	//keep waiting, until enter is pressed
 		}
 		//CompleteReport report = new CompleteReport(false, true);
 	}
 	
-	public static void main(String[] args) {
+	public static void main(String[] args) {	//entirely for testing
 		Button.waitForAnyPress();
 		DropoffInterface d = new DropoffInterface();
 		d.start();
