@@ -2,26 +2,25 @@ package RobotInterface;
 
 import java.awt.Point;
 
+import Objects.Item;
+import Objects.SingleTask;
 import lejos.nxt.LCD;
 import lejos.nxt.Button;
 import lejos.util.Delay;
 
 
-public class PickupInterface extends Thread {
+public class RobotPickup extends Thread {
 	
-	//private Point place;
+	private Point place;
 	private String id;
 	private int quantity;
 	
-	public PickupInterface(/*SingleTask pickup*/) {
-		/*Item item = pickup.getItem();
-		this.place = item.getLocation();
-		this.id = item.getID();
-		this.quantity = pickup.getQuantity();*/
+	public RobotPickup(SingleTask pickup) {
+		Item item = pickup.getItem();
+		this.place = new Point(item.getX(), item.getY());
+		this.id = "aa"; //item.getID(); //to be added
+		this.quantity = pickup.getQuantity();
 		
-		//this.place = new Point(3, 4);
-		this.id = "aa";
-		this.quantity = 5;
 	}
 	
 	public void run() { //will get started by Theo when in location
@@ -49,7 +48,9 @@ public class PickupInterface extends Thread {
 	
 	public static void main(String[] args) { //Used entirely for testing my code on a robot
 		Button.waitForAnyPress();
-		PickupInterface p = new PickupInterface();
+		Item testItem = new Item(3, 5, 1.2, 2.5);
+		SingleTask task = new SingleTask(testItem, 5);
+		RobotPickup p = new RobotPickup(task);
 		p.start();
 	}
 }
