@@ -8,7 +8,10 @@ import lejos.nxt.LCD;
 import lejos.nxt.Button;
 import lejos.util.Delay;
 
-
+/**
+ * The class that allows a user to interact with the robot to pick items up
+ *
+ */
 public class RobotPickup extends Thread {
 	
 	private Point place;

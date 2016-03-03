@@ -10,6 +10,10 @@ import lejos.nxt.LCD;
 import lejos.nxt.Button;
 import lejos.util.Delay;
 
+/**
+ * The class that will allow the user to interact with the robot to confirm dropping items off
+ * 
+ */
 public class RobotDropOff extends Thread {
 	
 	private Point place;
