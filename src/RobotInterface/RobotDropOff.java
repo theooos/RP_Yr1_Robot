@@ -12,7 +12,7 @@ import lejos.util.Delay;
 
 /**
  * The class that will allow the user to interact with the robot to confirm dropping items off
- * 
+ * @author rkelly
  */
 public class RobotDropOff extends Thread {
 	
@@ -25,31 +25,34 @@ public class RobotDropOff extends Thread {
 	}
 	
 	public void run() {
-		LCD.drawString("I have:", 1, 1);
-		int y = 2;
-		for(SingleTask t : items) {
-			LCD.drawString(t.getQuantity() + "x "/* + t.getItem().getID() //need to add*/, 2, y);
-			y++;
+		RobotConfirm confirm =  new RobotConfirm();
+		boolean correct = confirm.confirmLocation(3, 6); //will store true if location is correct
+		if(correct) { //if the location is correct
+			LCD.drawString("I have:", 1, 1);
+			int y = 2;
+			for(SingleTask t : items) {
+				LCD.drawString(t.getQuantity() + "x " + t.getItemID(), 2, y); //Display a single quantity of items held
+				y++; //increase y value so next print is on line below
+			}
+			LCD.drawString("Press ENTER", 2, y);  //Display instructions
+			int pressed = Button.waitForAnyPress(); //Record the pressed button
+			while(pressed != Button.ID_ENTER) {		//if it isn't enter
+				pressed = Button.waitForAnyPress();	//keep waiting, until enter is pressed
+			}
+			//CompleteReport report = new CompleteReport(false, true);
 		}
-		/*LCD.drawString("4x aa", 2, 2); 	//testing
-		LCD.drawString("3x ab", 2, 3); 	//testing	<-display what the robot is holding
-		LCD.drawString("5x ac", 2, 4);	//testing
-		int y = 5;						//testing*/
-		LCD.drawString("Press ENTER", 2, y);  //Display instructions
-		int pressed = Button.waitForAnyPress(); //Record the pressed button
-		while(pressed != Button.ID_ENTER) {		//if it isn't enter
-			pressed = Button.waitForAnyPress();	//keep waiting, until enter is pressed
+		else { //if the location isn't correct
+			//CompleteReport report = new CompleteReport(false, false); //return saying drop-off not completed
 		}
-		//CompleteReport report = new CompleteReport(false, true);
 	}
 	
 	public static void main(String[] args) {	//entirely for testing
 		Button.waitForAnyPress();
-		Item testItem1 = new Item(3, 5, 1.2, 2.5);
+		String testItem1 = "aa";
 		SingleTask task1 = new SingleTask(testItem1, 5);
-		Item testItem2 = new Item(2, 7, 1.8, 3.0);
+		String testItem2 = "ab";
 		SingleTask task2 = new SingleTask(testItem2, 3);
-		Item testItem3 = new Item(4, 2, 1.0, 2.0);
+		String testItem3 = "ac";
 		SingleTask task3 = new SingleTask(testItem3, 4);
 		List<SingleTask> tasks = new ArrayList<SingleTask>();
 		tasks.add(task1);

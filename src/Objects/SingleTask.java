@@ -8,22 +8,27 @@ import java.io.Serializable;
  */
 public class SingleTask implements Serializable {
 	
-	private Item item;
+	private String itemID;
 	private int quantity;
 
-	public SingleTask(Item item, int quantity) {
+    /**
+     * Create a new single task.
+     * @param itemID The item id.
+     * @param quantity The quantity of the item.
+     */
+	public SingleTask(String itemID, int quantity) {
 		
-		this.item = item;
+		this.itemID = itemID;
 		this.quantity = quantity;
 		
 	}
 	
 	/**
-	 * Get the item.
-	 * @return The item.
+	 * Get the item id.
+	 * @return The item id.
 	 */
-	public Item getItem() {
-		return item;
+	public String getItemID() {
+		return itemID;
 	}
 	
 	/**
@@ -37,7 +42,7 @@ public class SingleTask implements Serializable {
 	// toString method for debugging purposes
 	@Override
 	public String toString() {
-		return "SingleTask [item=" + item + ", quantity=" + quantity + "]";
+		return "SingleTask [item=" + itemID + ", quantity=" + quantity + "]";
 	}
 	
 	/**
@@ -45,7 +50,7 @@ public class SingleTask implements Serializable {
 	 * @return all parameters, seperated by commas
 	 */
 	public String parameters() {
-		return (item+","+quantity);
+		return (itemID+","+quantity);
 	}
 
 }
