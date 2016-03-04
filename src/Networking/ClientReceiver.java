@@ -1,14 +1,20 @@
 package Networking;
 
+import java.awt.Point;
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
+
+import Objects.Sendable.Move;
+import Objects.Sendable.SendableObject;
+import Objects.Sendable.SingleTask;
 
 public class ClientReceiver extends Thread {
 
 	private boolean alive = true;
 	private DataInputStream fromServer;
-	private ArrayList<Object> commands = new ArrayList<Object>();
+	private ArrayList<SendableObject> commands = new ArrayList<SendableObject>();
 
 	public ClientReceiver(DataInputStream fromServer) {
 		this.fromServer = fromServer;
@@ -28,9 +34,11 @@ public class ClientReceiver extends Thread {
 			}
 			
 			try {
-				String classTitle = fromServer.readUTF();
-				String command = fromServer.readUTF();
-				figureType(classTitle, command);				
+				String fullComm = fromServer.readUTF();
+				Object[] splitComm = Splitter.split(fullComm);
+				String type = (String) splitComm[0];
+				Object[] objParams = Arrays.copyOfRange(splitComm, 1, splitComm.length);
+				figureType(type, objParams);				
 				
 			} catch (IOException e) {
 				out("MyListener noticed the server died. Shutting everything down.");
@@ -41,15 +49,26 @@ public class ClientReceiver extends Thread {
 		}
 	}
 
-	// TODO This bad boy. Re-instantiates correct object types and adds to appropriate list.
-	private synchronized void figureType(String cT, String command) {
-		
-		if(cT.equals("Move")){
-				// Move moveObj = gson.fromJson(command, Move.class);
-				// addComm(moveObj);
-				// Creates a move object, adds to to the right list, etc...
+	/**
+	 * Reforms the Strings sent from the server into SendableObjects that are added then added to the commands list.
+	 * @param The name of the class.
+	 * @param The parameters of that class.
+	 */
+	private synchronized void figureType(String type, Object[] parameters) {
+		SendableObject newObj = null;
+		if(type.equals("Move")){
+			newObj = new Move((Character)parameters[0], new Point((Integer)parameters[1],(Integer)parameters[2]));
+		}
+		else if(type.equals("SingleTask")){
+			newObj = new SingleTask((String) parameters[0], (Integer) parameters[1]);
 		}
 		
+		if(newObj == null){
+			out("Error creating new object. Didn't know how to deal with: " + type);
+		}
+		else {
+			addComm(newObj);
+		}
 	}
 	
 	/**
@@ -67,7 +86,7 @@ public class ClientReceiver extends Thread {
 	 * 
 	 * @param comm The command to add.
 	 */
-	synchronized private void addComm(Object comm) {
+	synchronized private void addComm(SendableObject comm) {
 		commands.add(comm);
 	}
 	
