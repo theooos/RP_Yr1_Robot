@@ -1,12 +1,11 @@
 package Objects.Sendable;
 
-import java.io.Serializable;
 
 /**
  * SHARED OBJECTS
  * Used to represent a single task: what item is needed and how many are needed.
  */
-public class SingleTask implements Serializable {
+public class SingleTask {
 	
 	private String itemID;
 	private int quantity;
