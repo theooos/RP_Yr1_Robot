@@ -3,7 +3,7 @@ package Objects.Sendable;
 import java.awt.Point;
 import java.util.UUID;
 
-public class RobotInfo {
+public class RobotInfo implements SendableObject {
 
 	private UUID name;
 	private Point position;

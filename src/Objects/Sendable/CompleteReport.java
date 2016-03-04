@@ -1,6 +1,7 @@
 package Objects.Sendable;
 
-public class CompleteReport{
+
+public class CompleteReport implements SendableObject {
 	
 	private Boolean isPickup;
 	private Boolean wasCompleted;	

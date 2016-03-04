@@ -1,10 +1,11 @@
 package Objects.Sendable;
 
+
 /**
  * SHARED OBJECTS
  * Used to represent a move: if the robot has moved.
  */
-public class MoveReport {
+public class MoveReport implements SendableObject {
 
 	private Boolean moved;
 	

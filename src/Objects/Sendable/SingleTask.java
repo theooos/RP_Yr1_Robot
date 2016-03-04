@@ -5,7 +5,7 @@ package Objects.Sendable;
  * SHARED OBJECTS
  * Used to represent a single task: what item is needed and how many are needed.
  */
-public class SingleTask {
+public class SingleTask implements SendableObject {
 	
 	private String itemID;
 	private int quantity;
