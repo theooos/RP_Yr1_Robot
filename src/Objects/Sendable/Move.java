@@ -1,4 +1,4 @@
-package Objects;
+package Objects.Sendable;
 
 import java.awt.Point;
 
