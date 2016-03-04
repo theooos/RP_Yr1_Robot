@@ -24,10 +24,10 @@ public class RobotConfirm {
 		while(!confirmed) { //while the location hasn't been confirmed
 			LCD.drawString("Am I at (" + x + ", " + y + ")?", 1, 3); //output asking if it is correct
 			if(ySelected) {	//if yes is currently selected
-				LCD.drawString("-> Y / N", 2, 5); //clearly display that
+				LCD.drawString("-> Y / N", 3, 5); //clearly display that
 			}
 			else {
-				LCD.drawString("Y / N <-", 5,  5); //display a pointer to no
+				LCD.drawString("Y / N <-", 6,  5); //display a pointer to no
 			}
 			pressed = Button.waitForAnyPress(); //wait for a button to be pressed
 			if(pressed == Button.ID_ENTER) { //if the enter button is pressed

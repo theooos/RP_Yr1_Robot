@@ -30,8 +30,8 @@ public class RobotPickup extends Thread {
 		RobotConfirm confirm =  new RobotConfirm();
 		boolean correct = confirm.confirmLocation(3, 6); //will store true if location is correct
 		if(correct) {		//^ dummy data as I don't know currently how I will get the location
-			int x = LCD.CELL_WIDTH / 4;
-			int y = LCD.CELL_HEIGHT / 2;
+			int x = 2;
+			int y = 3;
 			LCD.drawString("I need " + quantity + "x " + id + ".", x, y); //Output message
 			int i = quantity;
 			int pressed;
@@ -42,7 +42,8 @@ public class RobotPickup extends Thread {
 					i--; //decrease the number needed
 				}
 				else { //otherwise
-					LCD.drawString("Press the enter button to add an item", x, y+2); //Instruction
+					LCD.drawString("Press enter", 3, y+1); //Instruction
+					LCD.drawString("to add", 5, y+2);
 					Delay.msDelay(1000); //display warning message
 					LCD.clear(); 
 				}
@@ -50,10 +51,13 @@ public class RobotPickup extends Thread {
 			}
 			LCD.clear();
 			//CompleteReport report = new CompleteReport(true, true); //to add to CommandHolder
+			System.out.println("CR: t, t"); //testing line
 		}
 		else { //if the location is incorrect, send a report saying the pickup wasn't completed
 			//CompleteReport report = new CompleteReport(true, false);
+			System.out.println("CR: t, f"); //testing line
 		}
+		Delay.msDelay(1000);
 	}
 	
 	public static void main(String[] args) { //Used entirely for testing my code on a robot
