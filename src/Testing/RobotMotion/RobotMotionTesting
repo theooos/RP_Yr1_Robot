@@ -1,0 +1,60 @@
+Robot Motion Control Test Run
+
+Test1: Long sequence of moves
+
+Move sequence used: FORWARD,RIGHT,LEFT,LEFT,RIGHT,FORWARD,RIGHT,LEFT,LEFT,FORWARD,FORWARD,LEFT,
+	      FORWARD,FORWARD,FORWARD,FORWARD,FORWARD,LEFT,FORWARD,LEFT
+
+Total number of runs: 8
+Number of failed runs: 3
+
+Run1=success
+Run2=success
+Run3=fail on first move
+Run4=fail on first move
+Run5=success
+Run6=success
+Run7=fail on second last move
+Run8=success
+
+Conclusion: *Robot always fails on the first move if not initially positioned correctly
+	    *Robot sometimes fails mid-execution if there are certain dark spots on 
+	     the map (detects a junction when it shouldn't)
+	    *Robot sometimes fails mid-execution if there is not enough space to rotate properly
+
+Test2: Backwards
+
+Move sequence used: FORWARD,FORWARD,BACKWARDS
+
+Total number of runs: 8
+Number of failed runs: 2
+
+Run1=fail on second move
+Run2=fail on second move
+--Restarted the program and tweaked light values after Run2--
+Run3=success
+Run4=success
+Run5=success
+Run6=success
+Run7=success
+Run8=success
+
+Conclusion: *Robot always fails on the first move if not initially positioned correctly
+	    *Robot sometimes fails mid-execution if there are certain dark spots on 
+	     the map (detects a junction when it shouldn't)
+	    *Robot sometimes fails mid-execution if there is not enough space to rotate properly
+
+Test3: Wall detection
+
+Move sequence used: FORWARD 
+
+Total number of runs: 5
+Number of fialed runs: 1
+
+Conclusion: *Robot sometimes moves backwards too much and it misses the last visited junction
+	    *
+
+
+	 
+		
+
