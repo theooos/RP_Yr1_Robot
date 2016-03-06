@@ -38,7 +38,7 @@ public class CompleteReport implements SendableObject {
 	 * @return all parameters, seperated by commas
 	 */
 	public String parameters() {
-		return (isPickup+","+wasCompleted);
+		return ("CompleteReport," + isPickup+","+wasCompleted);
 	}
 	
 }
