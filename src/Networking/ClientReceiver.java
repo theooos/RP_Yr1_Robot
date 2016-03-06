@@ -37,7 +37,10 @@ public class ClientReceiver extends Thread {
 				String fullComm = fromServer.readUTF();
 				Object[] splitComm = Splitter.split(fullComm);
 				String type = (String) splitComm[0];
-				Object[] objParams = Arrays.copyOfRange(splitComm, 1, splitComm.length);
+				Object[] objParams = new Object[splitComm.length-1];
+				for(int i = 1; i < splitComm.length; i++){
+					objParams[i-1] = splitComm[i];
+				}
 				figureType(type, objParams);				
 				
 			} catch (IOException e) {

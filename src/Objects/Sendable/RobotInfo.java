@@ -1,30 +1,29 @@
 package Objects.Sendable;
 
-import Objects.Direction;
-
 import java.awt.Point;
-import java.util.UUID;
+
+import Objects.Direction;
 
 public class RobotInfo implements SendableObject {
 
-	private UUID name;
+	private String name;
 	private Point position;
 	private Direction direction;
 
 	//By default, all robots start facing 'north' (which is west IRL)
-	public RobotInfo(UUID name, Point position) {
+	public RobotInfo(String name, Point position) {
 		this.name = name;
 		this.position = position;
 		direction = Direction.NORTH;
 	}
 
-	public RobotInfo(UUID name, Point position, Direction direction) {
+	public RobotInfo(String name, Point position, Direction direction) {
 		this.name = name;
 		this.position = position;
 		this.direction = direction;
 	}
 	
-	public UUID getName() {
+	public String getName() {
 		return name;
 	}
 	

@@ -4,7 +4,6 @@ import java.awt.Point;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.util.UUID;
 
 import lejos.nxt.comm.BTConnection;
 import lejos.nxt.comm.Bluetooth;
@@ -17,10 +16,10 @@ public class Client {
 
 	private ClientReceiver receiver;
 	
-	private UUID name;
+	private String name;
 	
 	public Client(String[] args) {
-		name = UUID.randomUUID();
+		name = "Alfie";
 		
 		System.out.println("Waiting for Bluetooth connection...");
 		BTConnection connection = Bluetooth.waitForConnection();
