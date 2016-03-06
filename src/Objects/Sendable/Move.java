@@ -41,7 +41,7 @@ public class Move implements SendableObject {
 	  * @return all parameters, seperated by commas
 	  */
 	 public String parameters() {
-		 return (direction+","+(int)nextLocation.getX() + "," + (int)nextLocation.getY());
+		 return ("Move," + direction+","+(int)nextLocation.getX() + "," + (int)nextLocation.getY());
 	 }
 
 }

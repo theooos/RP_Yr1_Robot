@@ -32,7 +32,7 @@ public class MoveReport implements SendableObject {
 	 * @return all parameters, seperated by commas
 	 */
 	public String parameters() {
-		return ("" + moved);
+		return ("MoveReport," + moved);
 	}
 	
 }

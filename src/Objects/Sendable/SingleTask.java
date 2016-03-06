@@ -49,7 +49,7 @@ public class SingleTask implements SendableObject {
 	 * @return all parameters, seperated by commas
 	 */
 	public String parameters() {
-		return (itemID+","+quantity);
+		return ("SingleTask," + itemID+","+quantity);
 	}
 
 }
