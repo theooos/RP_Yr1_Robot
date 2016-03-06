@@ -1,17 +1,21 @@
 package Networking;
 
+import java.awt.Point;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
-import java.util.ArrayList;
+import java.io.IOException;
 import java.util.UUID;
 
 import lejos.nxt.comm.BTConnection;
 import lejos.nxt.comm.Bluetooth;
+import Objects.Sendable.Move;
+import Objects.Sendable.RobotInfo;
+import Objects.Sendable.SendableObject;
+import Objects.Sendable.SingleTask;
 
 public class Client {
 
 	private ClientReceiver receiver;
-	private ClientSender sender;
 	
 	private UUID name;
 	
@@ -25,45 +29,38 @@ public class Client {
 		DataInputStream in = connection.openDataInputStream();
 		DataOutputStream out = connection.openDataOutputStream();
 		
-	    sender = new ClientSender(out);
-    	receiver = new ClientReceiver(in);
-	    sender.start();	    
+		ClientSender.setStream(out);
+    	receiver = new ClientReceiver(in);  
 	    receiver.start();
 	    
 	    // Ronan(name);
 	    // Luyobmir(whatever he needs);
 	    // Lyuobmir.start();
 	    
-	    // TODO Once objects are set up, use a name object.
-	    send(name);
+	    RobotInfo info = new RobotInfo(name, new Point(1,1));
+	    try {
+			ClientSender.send(info);
+		} catch (IOException e) {
+			out("Failed to send name");
+		}
 	    
  		while (receiver.isAlive()) {			
  			
  		   	// Goes through all available instructions and executes them.
- 			Object comm = null;
+ 			SendableObject comm = null;
  			
  		    while((comm = receiver.popCommand()) != null)
  		    {
- 		    	String cT = comm.getClass().getName();
- 		    	
- 		    	if(cT.equals("Move") || cT.equals("Something")){
- 		    		// Give it to the motion.
+ 		    	if(comm instanceof Move){
+ 		    		// Do blah
  		    	}
- 		    	else if(cT.equals("Somethingelse") || cT.equals("Test")){
- 		    		// Give it to the interface.
+ 		    	else if(comm instanceof SingleTask){
+ 		    		// Do blah
  		    	}
  		    }
  		}
      	out("MyClient no longer running");
 	}
-	
-	/**
-	 * Sends a message to the sender.
-	 * @param comm
-	 */
-	public void send(Object comm){
-    	sender.send(comm);
-    }
 
 	public static void main(String[] args) {
 		new Client(args);

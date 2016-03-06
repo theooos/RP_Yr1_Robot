@@ -1,81 +1,26 @@
 package Networking;
 
 import java.io.DataOutputStream;
-import java.util.ArrayList;
+import java.io.IOException;
 
-public class ClientSender extends Thread {
-	
-	private DataOutputStream toServer;
-	private ArrayList<Object> objectsToPuppet = new ArrayList<Object>();
+import Objects.Sendable.SendableObject;
 
-	public ClientSender(DataOutputStream toServer) {
-		this.toServer = toServer;
-	}
+public class ClientSender {
 	
-	/**
-	 * Always sending commands that it has been given to the Server for the
-	 * Puppet to use.
-	 */
-	/* Senders and receivers must always send two objects at a time.
-	 * Class name first, and then the JSON object.
-	 */
-	@Override
-	public void run(){
-		while(true){
-			Object comm = popCommand();
-			if(comm != null){
-				
-			}
-			
-//			try {
-//				Thread.sleep(100);
-				/* 
-				 * Uses Google's GSON to convert to JSON, instead of spending time
-				 * on making all commands serializable ourself.
-				 */
-//				Gson gson = new Gson();
-//				Object comm = popCommand();
-//				String className = comm.getClass().getName();
-//				String commString = gson.toJson(comm);
-//				
-//				if (commString != null){
-//					toServer.writeUTF(className);
-//					toServer.writeUTF(commString);
-//				}
-//			} catch (IOException e) {
-//				out("MyListener: Disconnected from server. Shutting down.");
-//			} catch (InterruptedException e) {
-//				out("Client sender sleep broken.");
-//			}
-		}
-	}
+	private static DataOutputStream toServer;
 	
-	/**
-	 * Gets the next command stored in objectsToPuppet
-	 * @return command
-	 */
-	synchronized private Object popCommand(){
-		if(objectsToPuppet.isEmpty()){
-			return null;
-		}
-		else{
-			Object comm = objectsToPuppet.get(0);
-			objectsToPuppet.remove(0);
-			return comm;
-		}
+	public static void setStream(DataOutputStream stream){
+		toServer = stream;
 	}
 	
 	/**
 	 * Only done so that access to the commands ArrayList is always synchronised.
 	 * @param comm The command to add.
+	 * @throws IOException 
 	 */
-	synchronized public void send(Object comm){
-		objectsToPuppet.add(comm);
-	}
-
-	// Helper command
-	private void out(Object n) {
-		System.out.println(""+n);
+	synchronized static public void send(SendableObject comm) throws IOException{
+		String dissolve = comm.parameters();
+		toServer.writeUTF(dissolve);
 	}
 
 }

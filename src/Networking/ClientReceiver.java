@@ -55,19 +55,28 @@ public class ClientReceiver extends Thread {
 	 * @param The parameters of that class.
 	 */
 	private synchronized void figureType(String type, Object[] parameters) {
-		SendableObject newObj = null;
-		if(type.equals("Move")){
-			newObj = new Move((Character)parameters[0], new Point((Integer)parameters[1],(Integer)parameters[2]));
-		}
-		else if(type.equals("SingleTask")){
-			newObj = new SingleTask((String) parameters[0], (Integer) parameters[1]);
-		}
-		
-		if(newObj == null){
-			out("Error creating new object. Didn't know how to deal with: " + type);
+		if(type.equals("Console")){
+			String message = "";
+			for(Object param : parameters){
+				message += param;
+			}
+			out(message);
 		}
 		else {
-			addComm(newObj);
+			SendableObject newObj = null;
+			if(type.equals("Move")){
+				newObj = new Move((Character)parameters[0], new Point((Integer)parameters[1],(Integer)parameters[2]));
+			}
+			else if(type.equals("SingleTask")){
+				newObj = new SingleTask((String) parameters[0], (Integer) parameters[1]);
+			}
+			
+			if(newObj == null){
+				out("Error creating new object. Didn't know how to deal with: " + type);
+			}
+			else {
+				addComm(newObj);
+			}
 		}
 	}
 	
@@ -94,11 +103,11 @@ public class ClientReceiver extends Thread {
 	 * Takes the next message from the message list.
 	 * @return
 	 */
-	synchronized public Object popCommand() {
+	synchronized public SendableObject popCommand() {
 		if (commands.isEmpty()) {
 			return null;
 		} else {
-			Object comm = commands.get(0);
+			SendableObject comm = commands.get(0);
 			commands.remove(0);
 			return comm;
 		}
