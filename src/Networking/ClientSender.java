@@ -18,9 +18,15 @@ public class ClientSender {
 	 * @param comm The command to add.
 	 * @throws IOException 
 	 */
-	synchronized static public void send(SendableObject comm) throws IOException{
+	synchronized static public void send(SendableObject comm){
 		String dissolve = comm.parameters();
-		toServer.writeUTF(dissolve);
+		try {
+			toServer.writeUTF(dissolve);
+			toServer.flush();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 }

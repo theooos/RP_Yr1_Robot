@@ -3,14 +3,13 @@ package Networking;
 import java.awt.Point;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
-import java.io.IOException;
 
-import lejos.nxt.comm.BTConnection;
-import lejos.nxt.comm.Bluetooth;
 import Objects.Sendable.Move;
 import Objects.Sendable.RobotInfo;
 import Objects.Sendable.SendableObject;
 import Objects.Sendable.SingleTask;
+import lejos.nxt.comm.BTConnection;
+import lejos.nxt.comm.Bluetooth;
 
 public class Client {
 
@@ -36,12 +35,9 @@ public class Client {
 	    // Luyobmir(whatever he needs);
 	    // Lyuobmir.start();
 	    
+	    // TODO Get the robot's proper name.
 	    RobotInfo info = new RobotInfo(name, new Point(1,1));
-	    try {
-			ClientSender.send(info);
-		} catch (IOException e) {
-			out("Failed to send name");
-		}
+	    ClientSender.send(info);
 	    
  		while (receiver.isAlive()) {			
  			

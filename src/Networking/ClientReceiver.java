@@ -4,11 +4,11 @@ import java.awt.Point;
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 import Objects.Sendable.Move;
 import Objects.Sendable.SendableObject;
 import Objects.Sendable.SingleTask;
+import lejos.nxt.LCD;
 
 public class ClientReceiver extends Thread {
 
@@ -28,13 +28,15 @@ public class ClientReceiver extends Thread {
 	public void run() {
 		while (alive) {
 			try {
-				sleep(100);
+				Thread.sleep(100);
 			} catch (InterruptedException e) {
 				System.out.println("INTERRUPTED.");
 			}
 			
 			try {
+				out("About to read.");
 				String fullComm = fromServer.readUTF();
+				Thread.sleep(1000);
 				Object[] splitComm = Splitter.split(fullComm);
 				String type = (String) splitComm[0];
 				Object[] objParams = new Object[splitComm.length-1];
@@ -48,6 +50,8 @@ public class ClientReceiver extends Thread {
 				System.exit(3);
 			} catch (NullPointerException e) {
 				// Stops .readUTF from throwing errors.
+			} catch (InterruptedException e) {
+				out("Connection broke.");
 			}
 		}
 	}
@@ -56,19 +60,36 @@ public class ClientReceiver extends Thread {
 	 * Reforms the Strings sent from the server into SendableObjects that are added then added to the commands list.
 	 * @param The name of the class.
 	 * @param The parameters of that class.
+	 * @throws InterruptedException 
 	 */
-	private synchronized void figureType(String type, Object[] parameters) {
+	private synchronized void figureType(String type, Object[] parameters) throws InterruptedException {
 		if(type.equals("Console")){
 			String message = "";
 			for(Object param : parameters){
 				message += param;
 			}
 			out(message);
+			Thread.sleep(1000);
 		}
 		else {
 			SendableObject newObj = null;
 			if(type.equals("Move")){
-				newObj = new Move((Character)parameters[0], new Point((Integer)parameters[1],(Integer)parameters[2]));
+				Character test = 'f';
+				out(test + " " + test.getClass());
+				out("first:" + parameters[0] + " " + parameters[0].getClass());
+				
+				// TODO Find a fix for the char casting bug.
+				char direction = (Character) parameters[0];
+				out("Direction: " + direction);
+				Thread.sleep(1000);
+				
+				Point location = new Point((Integer)parameters[1], (Integer)parameters[2]);
+				out("Location: " + location.getX() + "," + location.getY());
+				Thread.sleep(1000);
+				
+				newObj = new Move(direction, location);
+				out("Finished move");
+				Thread.sleep(1000);
 			}
 			else if(type.equals("SingleTask")){
 				newObj = new SingleTask((String) parameters[0], (Integer) parameters[1]);
