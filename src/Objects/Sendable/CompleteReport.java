@@ -1,8 +1,7 @@
-package Objects;
+package Objects.Sendable;
 
-import java.io.Serializable;
 
-public class CompleteReport implements Serializable {
+public class CompleteReport implements SendableObject {
 	
 	private Boolean isPickup;
 	private Boolean wasCompleted;	
@@ -39,7 +38,7 @@ public class CompleteReport implements Serializable {
 	 * @return all parameters, seperated by commas
 	 */
 	public String parameters() {
-		return (isPickup+","+wasCompleted);
+		return ("CompleteReport," + isPickup+","+wasCompleted);
 	}
 	
 }

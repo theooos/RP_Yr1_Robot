@@ -1,12 +1,11 @@
-package Objects;
+package Objects.Sendable;
 
-import java.io.Serializable;
 
 /**
  * SHARED OBJECTS
  * Used to represent a move: if the robot has moved.
  */
-public class MoveReport implements Serializable {
+public class MoveReport implements SendableObject {
 
 	private Boolean moved;
 	
@@ -33,7 +32,7 @@ public class MoveReport implements Serializable {
 	 * @return all parameters, seperated by commas
 	 */
 	public String parameters() {
-		return ("" + moved);
+		return ("MoveReport," + moved);
 	}
 	
 }
