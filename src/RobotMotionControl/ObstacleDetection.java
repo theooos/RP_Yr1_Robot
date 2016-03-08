@@ -14,35 +14,17 @@ public class ObstacleDetection implements Behavior {
 	private OpticalDistanceSensor ranger;
 	private WheeledRobotSystem system;
 	private boolean suppress=false;
-	private LightSensor left;
-	private LightSensor right;
-	private int leftValue;
-	private int rightValue;
-	private DifferentialPilot pilot;
-	private final int threshold = 35;
+    private DifferentialPilot pilot;
+
 	
-	public ObstacleDetection(WheeledRobotConfiguration config,LightSensor left,LightSensor right,double speed,OpticalDistanceSensor sensor){
+	public ObstacleDetection(WheeledRobotConfiguration config,double speed,OpticalDistanceSensor sensor){
 		ranger=sensor;
 		system = new WheeledRobotSystem(config);
-		this.left=left;
-		this.right=right;
 		pilot=system.getPilot();
 		pilot.setTravelSpeed(speed);
 	}
 	
-	private void generateLightValues(){
-		leftValue=left.getLightValue();
-		rightValue=(int)(right.getLightValue()*0.8);
-		if(leftValue>40)
-			leftValue=45;
-		else
-			leftValue=35;
-		if(rightValue>40)
-			rightValue=45;
-		else
-			rightValue=35;
 
-	}
 	@Override
 	public boolean takeControl() {
 		if(ranger.getRange()<=12)
@@ -51,20 +33,18 @@ public class ObstacleDetection implements Behavior {
 	}
 	
 	private MoveReport sendReport(boolean hasMoved){
+		 LCD.drawString(hasMoved+"", 0, 0);
 		 return new MoveReport(hasMoved);
 	}
 	
 	@Override
 	public void action() {
-
-			while((leftValue!=threshold && rightValue!=threshold) && !suppress){
-				pilot.backward();
-				Delay.msDelay(25);
-				//LCD.drawString(suppress+"", 0, 0);
-			}
-			pilot.stop();
-			sendReport(false);
-			suppress=false;
+		pilot.backward();
+		sendReport(false);
+		while(!suppress){
+			Delay.msDelay(50);
+		}
+		suppress=false;
 	}
 	
 	@Override

@@ -18,7 +18,7 @@ public class JunctionDetection implements Behavior {
 	private int leftValue;
 	private int rightValue;
 	private DifferentialPilot pilot;
-	private boolean firstJunction=true;
+	private boolean firstJunction=true; 
 	//Light value threshold
 	private final int threshold = 35;
 	//Moves
@@ -27,8 +27,9 @@ public class JunctionDetection implements Behavior {
 	private final int FORWARD=2;
 	private final int BACKWARDS=3;
 	//Test array 
-	private int[] pattern = {FORWARD,RIGHT,LEFT,LEFT,RIGHT,FORWARD,RIGHT,LEFT,LEFT,FORWARD,FORWARD,LEFT,FORWARD,FORWARD,FORWARD,FORWARD,FORWARD,LEFT,FORWARD,LEFT};
+	//private int[] pattern = {FORWARD,RIGHT,LEFT,LEFT,RIGHT,FORWARD,RIGHT,LEFT,LEFT,FORWARD,FORWARD,LEFT,FORWARD,FORWARD,FORWARD,FORWARD,FORWARD,LEFT,FORWARD,LEFT};
 	//private int[] pattern = {FORWARD,FORWARD,BACKWARDS,FORWARD,FORWARD,BACKWARDS,FORWARD,FORWARD,BACKWARDS};
+	private int[] pattern = {LEFT};
 	private int i=0;
 	
 
@@ -62,14 +63,15 @@ public class JunctionDetection implements Behavior {
 		
 		generateLightValues();
 		if(leftValue==threshold && rightValue==threshold){
-			if(!firstJunction)
+			if(!firstJunction){
 				sendReport(true);
+			    
+			}
 			else
 				firstJunction=false;
 			return true;
 			
 		}
-		
 		return false;
 	}
 	//Rotates at 180 degrees
@@ -102,6 +104,7 @@ public class JunctionDetection implements Behavior {
 			
 	}
 	private MoveReport sendReport(boolean hasMoved){
+		LCD.drawString(hasMoved+"", 0, 0);
 		 return new MoveReport(hasMoved);
 	}
 

@@ -22,7 +22,7 @@ public class Initiator {
 		//Detects junctions and makes one move per junction
 		Behavior junction = new JunctionDetection((WheeledRobotConfiguration) RobotConfigs.CASTOR_BOT,new LightSensor(SensorPort.S1),new LightSensor(SensorPort.S4),speed);
 		//Detects obstacles
-		Behavior walls = new ObstacleDetection((WheeledRobotConfiguration) RobotConfigs.CASTOR_BOT,new LightSensor(SensorPort.S1),new LightSensor(SensorPort.S4),speed,new OpticalDistanceSensor(SensorPort.S2));
+		Behavior walls = new ObstacleDetection((WheeledRobotConfiguration) RobotConfigs.CASTOR_BOT,speed,new OpticalDistanceSensor(SensorPort.S2));
 		
 		Arbitrator arby = new Arbitrator(new Behavior[] {line,walls,junction});
 		arby.start();
