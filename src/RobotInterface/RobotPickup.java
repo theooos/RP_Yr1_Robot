@@ -2,7 +2,7 @@ package RobotInterface;
 
 import java.awt.Point;
 
-import Objects.CompleteReport;
+import Objects.Sendable.CompleteReport;
 import Objects.Item;
 import Objects.SingleTask;
 import lejos.nxt.LCD;
