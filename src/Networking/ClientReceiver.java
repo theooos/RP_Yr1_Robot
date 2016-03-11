@@ -92,7 +92,7 @@ public class ClientReceiver extends Thread {
 				Thread.sleep(1000);
 			}
 			else if(type.equals("SingleTask")){
-				newObj = new SingleTask((String) parameters[0], (Integer) parameters[1]);
+				newObj = new SingleTask((String) parameters[0], (Integer) parameters[1], new Point((int) parameters[2], (int) parameters[3]));
 			}
 			
 			if(newObj == null){

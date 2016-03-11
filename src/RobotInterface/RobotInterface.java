@@ -2,7 +2,9 @@ package RobotInterface;
 
 import java.util.ArrayList;
 import Objects.CommandHolder;
+import Objects.Sendable.DropOffPoint;
 import Objects.Sendable.SingleTask;
+import Objects.Sendable.StartUpItem;
 import lejos.nxt.Button;
 import lejos.nxt.ButtonListener;
 import lejos.nxt.LCD;
@@ -114,13 +116,13 @@ public class RobotInterface {
 	 */
 	public void add(Object command) {
 		SingleTask st;
-		DropoffPoint dp;
+		DropOffPoint dp;
 		if(command instanceof SingleTask) {
 			st = (SingleTask) command;
 			pickup(st);
 		}
-		else if(command instanceof DropoffPoint) {
-			dp = (DropoffPoint) command;
+		else if(command instanceof DropOffPoint) {
+			dp = (DropOffPoint) command;
 			dropoff(dp);
 		}
 	}
@@ -128,7 +130,7 @@ public class RobotInterface {
 	 * Allow the user to interact with the robot to drop-off items
 	 * @param where
 	 */
-	private void dropoff(DropoffPoint where) {
+	private void dropoff(DropOffPoint where) {
 		ArrayList<String> buffer = new ArrayList<String>();
 		Button.RIGHT.addButtonListener(new ButtonListener() {
 			int x = 2;				//when the scroll is pressed
@@ -262,7 +264,7 @@ public class RobotInterface {
 		return ySelected; //after confirmation, return whether yes was selected
 	}
 
-	public static void main(String[] args) { //entirely used for testing
+	/*public static void main(String[] args) { //entirely used for testing
 		Button.waitForAnyPress();
 		CommandHolder h = new CommandHolder();
 		RobotInterface i = new RobotInterface("dshfjdshf", h);
@@ -275,6 +277,6 @@ public class RobotInterface {
 		Delay.msDelay(1000);
 		i.add(new DropoffPoint(6, 2));
 		
-	}
+	}*/
 
 }

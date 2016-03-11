@@ -60,7 +60,7 @@ public class SingleTask implements SendableObject {
 	 * @return all parameters, seperated by commas.
 	 */
 	public String parameters() {
-		return ("SingleTask," + itemID + "," + quantity + "," + location);
+		return ("SingleTask," + itemID + "," + quantity + "," + location.getX() + "," + location.getY());
 	}
 
 }
