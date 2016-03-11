@@ -1,0 +1,145 @@
+package Networking;
+
+import java.awt.Point;
+import java.io.DataInputStream;
+import java.io.IOException;
+import java.util.ArrayList;
+
+import Objects.Sendable.Move;
+import Objects.Sendable.SendableObject;
+import Objects.Sendable.SingleTask;
+import lejos.nxt.LCD;
+
+public class ClientReceiver extends Thread {
+
+	private boolean alive = true;
+	private DataInputStream fromServer;
+	private ArrayList<SendableObject> commands = new ArrayList<SendableObject>();
+
+	public ClientReceiver(DataInputStream fromServer) {
+		this.fromServer = fromServer;
+	}
+
+	/**
+	 * Forever trying to read two messages at a time from the server, to deduce
+	 * new commands.
+	 */
+	@Override
+	public void run() {
+		while (alive) {
+			try {
+				Thread.sleep(100);
+			} catch (InterruptedException e) {
+				System.out.println("INTERRUPTED.");
+			}
+			
+			try {
+				out("About to read.");
+				String fullComm = fromServer.readUTF();
+				Thread.sleep(1000);
+				Object[] splitComm = Splitter.split(fullComm);
+				String type = (String) splitComm[0];
+				Object[] objParams = new Object[splitComm.length-1];
+				for(int i = 1; i < splitComm.length; i++){
+					objParams[i-1] = splitComm[i];
+				}
+				figureType(type, objParams);				
+				
+			} catch (IOException e) {
+				out("MyListener noticed the server died. Shutting everything down.");
+				System.exit(3);
+			} catch (NullPointerException e) {
+				// Stops .readUTF from throwing errors.
+			} catch (InterruptedException e) {
+				out("Connection broke.");
+			}
+		}
+	}
+
+	/**
+	 * Reforms the Strings sent from the server into SendableObjects that are added then added to the commands list.
+	 * @param The name of the class.
+	 * @param The parameters of that class.
+	 * @throws InterruptedException 
+	 */
+	private synchronized void figureType(String type, Object[] parameters) throws InterruptedException {
+		if(type.equals("Console")){
+			String message = "";
+			for(Object param : parameters){
+				message += param;
+			}
+			out(message);
+			Thread.sleep(1000);
+		}
+		else {
+			SendableObject newObj = null;
+			if(type.equals("Move")){
+				Character test = 'f';
+				out(test + " " + test.getClass());
+				out("first:" + parameters[0] + " " + parameters[0].getClass());
+				
+				// TODO Find a fix for the char casting bug.
+				char direction = (Character) parameters[0];
+				out("Direction: " + direction);
+				Thread.sleep(1000);
+				
+				Point location = new Point((Integer)parameters[1], (Integer)parameters[2]);
+				out("Location: " + location.getX() + "," + location.getY());
+				Thread.sleep(1000);
+				
+				newObj = new Move(direction, location);
+				out("Finished move");
+				Thread.sleep(1000);
+			}
+			else if(type.equals("SingleTask")){
+				newObj = new SingleTask((String) parameters[0], (Integer) parameters[1]);
+			}
+			
+			if(newObj == null){
+				out("Error creating new object. Didn't know how to deal with: " + type);
+			}
+			else {
+				addComm(newObj);
+			}
+		}
+	}
+	
+	/**
+	 * Ends the thread.
+	 */
+	public void shutdown(){
+		alive = false;
+	}
+
+	// ************************ ARRAYLIST ACCESSORS **************************
+	
+	/**
+	 * Only done so that access to the commandsForInterface ArrayList is always
+	 * synchronised.
+	 * 
+	 * @param comm The command to add.
+	 */
+	synchronized private void addComm(SendableObject comm) {
+		commands.add(comm);
+	}
+	
+	/**
+	 * Takes the next message from the message list.
+	 * @return
+	 */
+	synchronized public SendableObject popCommand() {
+		if (commands.isEmpty()) {
+			return null;
+		} else {
+			SendableObject comm = commands.get(0);
+			commands.remove(0);
+			return comm;
+		}
+	}
+
+	// ******************** HELPER COMMANDS **********************
+	
+	private void out(Object n) {
+		System.out.println("" + n);
+	}
+}
