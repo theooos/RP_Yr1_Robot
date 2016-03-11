@@ -5,8 +5,8 @@ import java.util.ArrayList;
 /**
  * 
  * @author theo
- *
- */
+*/
+
 public class CommandHolder {
 
 	private static ArrayList<Commands> commands = new ArrayList<Commands>();

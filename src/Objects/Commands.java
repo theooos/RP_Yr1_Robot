@@ -4,6 +4,8 @@ package Objects;
  * 
  * @author theo
  *
+ * @param <Person> The person type, we'll use String.
+ * @param <Command> The command type, we'll use Object.
  */
 public class Commands {
 
