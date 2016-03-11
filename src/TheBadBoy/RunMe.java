@@ -25,9 +25,9 @@ private ClientReceiver receiver;
 	
 	public RunMe(String[] args) {
 		
-//		System.out.println("Waiting for Bluetooth connection...");
+		System.out.println("Waiting for Bluetooth connection...");
 		BTConnection connection = Bluetooth.waitForConnection();
-//		System.out.println("OK!");
+		System.out.println("OK!");
 
 		DataInputStream in = connection.openDataInputStream();
 		DataOutputStream out = connection.openDataOutputStream();
@@ -35,11 +35,6 @@ private ClientReceiver receiver;
 		ClientSender.setStream(out);
     	receiver = new ClientReceiver(in);  
 	    receiver.start();
-	    
-	    
-//	    // TODO Get the robot's proper name.
-//	    RobotInfo info = new RobotInfo(name, new Point(1,1));
-//	    ClientSender.send(info);
 	    
  		while (receiver.isAlive()) {			
  			
@@ -55,7 +50,9 @@ private ClientReceiver receiver;
  		    		theInterface.add(comm);
  		    	}
  		    	else if(comm instanceof RobotInfo){
- 		    		theInterface = new RobotInterface(((RobotInfo)comm).getName());
+ 		    		name = ((RobotInfo) comm).getName();
+ 		    		theInterface = new RobotInterface(name);
+ 		    		ClientSender.send(new RobotInfo(name));
  		    	}
  		    }
  		}
