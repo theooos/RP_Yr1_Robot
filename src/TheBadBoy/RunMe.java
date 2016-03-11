@@ -7,6 +7,7 @@ import Networking.ClientReceiver;
 import Networking.ClientSender;
 import Objects.Sendable.DropOffPoint;
 import Objects.Sendable.Move;
+import Objects.Sendable.RobotInfo;
 import Objects.Sendable.SendableObject;
 import Objects.Sendable.SingleTask;
 import RobotInterface.RobotInterface;
@@ -20,8 +21,9 @@ private ClientReceiver receiver;
 	
 	private String name;
 	
+	private RobotInterface theInterface;
+	
 	public RunMe(String[] args) {
-		name = "Alfie";
 		
 //		System.out.println("Waiting for Bluetooth connection...");
 		BTConnection connection = Bluetooth.waitForConnection();
@@ -34,7 +36,7 @@ private ClientReceiver receiver;
     	receiver = new ClientReceiver(in);  
 	    receiver.start();
 	    
-	    RobotInterface theInterface = new RobotInterface(name);	    
+	    
 //	    // TODO Get the robot's proper name.
 //	    RobotInfo info = new RobotInfo(name, new Point(1,1));
 //	    ClientSender.send(info);
@@ -51,6 +53,9 @@ private ClientReceiver receiver;
  		    	}
  		    	else if(comm instanceof SingleTask || comm instanceof DropOffPoint){
  		    		theInterface.add(comm);
+ 		    	}
+ 		    	else if(comm instanceof RobotInfo){
+ 		    		theInterface = new RobotInterface(((RobotInfo)comm).getName());
  		    	}
  		    }
  		}

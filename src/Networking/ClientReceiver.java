@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import Objects.Sendable.Move;
 import Objects.Sendable.SendableObject;
 import Objects.Sendable.SingleTask;
-import lejos.nxt.LCD;
 
 public class ClientReceiver extends Thread {
 
