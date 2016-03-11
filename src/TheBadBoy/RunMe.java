@@ -52,7 +52,6 @@ private ClientReceiver receiver;
  		    	else if(comm instanceof RobotInfo){
  		    		name = ((RobotInfo) comm).getName();
  		    		theInterface = new RobotInterface(name);
- 		    		ClientSender.send(new RobotInfo(name));
  		    	}
  		    }
  		}
