@@ -5,7 +5,7 @@ package Objects.Sendable;
  * @author rkelly
  *
  */
-public class StartUpItem {
+public class StartUpItem implements SendableObject {
 	
 	private String name;
 	private int x;
@@ -39,7 +39,8 @@ public class StartUpItem {
 		return "StartUpItem [name=" + name + ", x=" + x + ", y=" + y + ", direction=" + direction + "]";
 	}
 	
+	@Override
 	public String parameters() {
-		return (name + "," + x + "," + y + "," + direction);
+		return ("StartUpItem," + name + "," + x + "," + y + "," + direction);
 	}
 }

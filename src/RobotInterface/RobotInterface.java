@@ -1,7 +1,9 @@
 package RobotInterface;
 
 import java.util.ArrayList;
-import Objects.CommandHolder;
+
+import Networking.ClientSender;
+import Objects.Sendable.CompleteReport;
 import Objects.Sendable.DropOffPoint;
 import Objects.Sendable.SingleTask;
 import Objects.Sendable.StartUpItem;
@@ -21,10 +23,10 @@ public class RobotInterface {
 	
 	private ArrayList<String> itemsHeld;
 	
-	public RobotInterface(String robotName, CommandHolder holder) {
+	public RobotInterface(String robotName) {
 		itemsHeld = new ArrayList<String>();
 		StartUpItem sui = getDetails(robotName);
-		//holder.add("network", sui);
+		ClientSender.send(sui);
 	}
 	
 	/**
@@ -175,18 +177,17 @@ public class RobotInterface {
 			while(pressed != Button.ID_ENTER) {		//if it isn't enter
 				pressed = Button.waitForAnyPress();	//keep waiting, until enter is pressed
 			}
-			//CompleteReport report = new CompleteReport(false, true);
+			CompleteReport report = new CompleteReport(false, true);
+			ClientSender.send(report);
 			LCD.clear();
-			System.out.println("CR: f, t"); //testing line - remove
 			while(!itemsHeld.isEmpty()) {
 				itemsHeld.remove(0);
 			}
 		}
 		else { //if the location isn't correct
-			//CompleteReport report = new CompleteReport(false, false); //return saying drop-off not completed
-			System.out.println("CR: f, f"); //testing line - remove
+			CompleteReport report = new CompleteReport(false, false); //return saying drop-off not completed
+			ClientSender.send(report);
 		}
-		Delay.msDelay(1000); //remove
 		LCD.clear();
 	}
 	
@@ -220,14 +221,13 @@ public class RobotInterface {
 			}
 			itemsHeld.add(quantity + "x " + id);
 			LCD.clear();
-			//CompleteReport report = new CompleteReport(true, true); //to add to CommandHolder
-			System.out.println("CR: t, t"); //testing line - remove
+			CompleteReport report = new CompleteReport(true, true); //to add to CommandHolder
+			ClientSender.send(report);
 		}
 		else { //if the location is incorrect, send a report saying the pickup wasn't completed
-			//CompleteReport report = new CompleteReport(true, false);
-			System.out.println("CR: t, f"); //testing line - remove
+			CompleteReport report = new CompleteReport(true, false);
+			ClientSender.send(report);
 		}
-		Delay.msDelay(1000); //remove
 		LCD.clear();
 	}
 	

@@ -1,4 +1,5 @@
 package RobotMotionControl;
+import lejos.nxt.LCD;
 import lejos.nxt.LightSensor;
 import lejos.robotics.navigation.DifferentialPilot;
 import lejos.robotics.subsumption.Behavior;
@@ -60,13 +61,14 @@ public class LineFollow implements Behavior {
 	 * Uses an error (difference between light values) to determine if it should steer or not
 	 */
 	public void action() {
+		LCD.drawString("LineFollow", 0, 2);
 		pilot.forward();
 
 		while(!suppress){
 			
 			generateLightValues();
 		    error=leftValue-rightValue;
-			//LCD.drawString(leftValue+" "+rightValue+" "+error, 0, 0);
+//			LCD.drawString(leftValue+" "+rightValue+" "+error, 0, 0);
 			if(error==10||error==-10){
 				pilot.steer((double)(-error * scale));
 			}

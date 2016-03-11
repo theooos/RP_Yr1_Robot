@@ -34,7 +34,7 @@ public class ClientReceiver extends Thread {
 			}
 			
 			try {
-				out("About to read.");
+//				out("About to read.");
 				String fullComm = fromServer.readUTF();
 				Thread.sleep(1000);
 				Object[] splitComm = Splitter.split(fullComm);
@@ -74,25 +74,14 @@ public class ClientReceiver extends Thread {
 		else {
 			SendableObject newObj = null;
 			if(type.equals("Move")){
-				Character test = 'f';
-				out(test + " " + test.getClass());
-				out("first:" + parameters[0] + " " + parameters[0].getClass());
-				
-				// TODO Find a fix for the char casting bug.
-				char direction = (Character) parameters[0];
-				out("Direction: " + direction);
-				Thread.sleep(1000);
-				
+				char direction = parameters[0].toString().charAt(0);				
 				Point location = new Point((Integer)parameters[1], (Integer)parameters[2]);
-				out("Location: " + location.getX() + "," + location.getY());
-				Thread.sleep(1000);
-				
+
 				newObj = new Move(direction, location);
-				out("Finished move");
-				Thread.sleep(1000);
+				Thread.sleep(200);
 			}
 			else if(type.equals("SingleTask")){
-				newObj = new SingleTask((String) parameters[0], (Integer) parameters[1], new Point((int) parameters[2], (int) parameters[3]));
+				newObj = new SingleTask((String) parameters[0].toString(), (Integer) parameters[1], new Point((Integer) parameters[2], (Integer) parameters[3]));
 			}
 			
 			if(newObj == null){

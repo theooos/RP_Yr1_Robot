@@ -39,6 +39,7 @@ public class ObstacleDetection implements Behavior {
 	
 	@Override
 	public void action() {
+		LCD.drawString("ObstacleDetection", 0, 0);
 		pilot.backward();
 		sendReport(false);
 		while(!suppress){

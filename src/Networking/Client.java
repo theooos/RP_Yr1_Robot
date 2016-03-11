@@ -20,9 +20,9 @@ public class Client {
 	public Client(String[] args) {
 		name = "Alfie";
 		
-		System.out.println("Waiting for Bluetooth connection...");
+//		System.out.println("Waiting for Bluetooth connection...");
 		BTConnection connection = Bluetooth.waitForConnection();
-		System.out.println("OK!");
+//		System.out.println("OK!");
 
 		DataInputStream in = connection.openDataInputStream();
 		DataOutputStream out = connection.openDataOutputStream();
@@ -54,7 +54,7 @@ public class Client {
  		    	}
  		    }
  		}
-     	out("MyClient no longer running");
+//     	out("MyClient no longer running");
 	}
 
 	public static void main(String[] args) {

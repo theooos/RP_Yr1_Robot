@@ -13,40 +13,23 @@ import rp.systems.WheeledRobotSystem;
  */
 public class SensorTest {
 
-	private WheeledRobotSystem system;
-	private LightSensor left;
-	private LightSensor right;
-	private boolean running=true;
-public SensorTest(WheeledRobotConfiguration config,LightSensor left,LightSensor right){
-		
-		this.system= new WheeledRobotSystem(config);
-		this.left=left;
-		this.right=right;
-	}
+	private static float leftValue;
+	private static float rightValue;
+	private static LightSensor left = new LightSensor(SensorPort.S1);
+	private static LightSensor right = new LightSensor(SensorPort.S3);
+	private static boolean running=true;
+	
+	
 	public static void main(String[] args){
-		
-		SensorTest lightTest = new SensorTest((WheeledRobotConfiguration)RobotConfigs.CASTOR_BOT,new LightSensor(SensorPort.S1),new LightSensor(SensorPort.S4));
-		lightTest.run();
-		
+		run();
 	}
-	public void run(){
-		int leftValue;
-		int rightValue;
+	
+	public static void run(){
 		while(running){
 			 
-			leftValue = left.getLightValue();
-			rightValue=(int)(right.getLightValue()*0.8);
-			if(leftValue>40)
-				leftValue=45;
-			else
-				leftValue=35;
-			if(rightValue>40)
-				rightValue=45;
-			else
-				rightValue=35;
-			int error=Math.abs(leftValue-rightValue);
+			generateLightValues();
 		
-		    LCD.drawString(leftValue+" "+rightValue+" "+ error, 0, 0);
+		    LCD.drawString(leftValue+" "+rightValue+" ", 0, 0);
 		    Delay.msDelay(50);
 		}
 		
@@ -55,5 +38,9 @@ public SensorTest(WheeledRobotConfiguration config,LightSensor left,LightSensor 
 		running=false;
 	}
 
+	private static void generateLightValues(){
+		leftValue = left.getLightValue();
+		rightValue = right.getLightValue();
+	}
 }
 
