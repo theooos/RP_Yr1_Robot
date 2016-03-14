@@ -1,7 +1,7 @@
  package Objects;
 
 
- import java.awt.*;
+ import java.awt.Point;
 
  /**
  * SHARED OBJECTS

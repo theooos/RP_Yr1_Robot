@@ -11,7 +11,7 @@ import Objects.Sendable.RobotInfo;
 import Objects.Sendable.SendableObject;
 import Objects.Sendable.SingleTask;
 import RobotInterface.RobotInterface;
-import RobotMotionControl.TestMovement;
+import RobotMotionControl.RobotMotion;
 import lejos.nxt.comm.BTConnection;
 import lejos.nxt.comm.Bluetooth;
 
@@ -44,7 +44,7 @@ private ClientReceiver receiver;
  		    while((comm = receiver.popCommand()) != null)
  		    {
  		    	if(comm instanceof Move){
- 		    		TestMovement.move((Move)comm);
+ 		    		RobotMotion.move((Move)comm);
  		    	}
  		    	else if(comm instanceof SingleTask || comm instanceof DropOffPoint){
  		    		theInterface.add(comm);

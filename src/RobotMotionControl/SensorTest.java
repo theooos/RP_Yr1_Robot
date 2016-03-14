@@ -4,9 +4,6 @@ import lejos.nxt.LCD;
 import lejos.nxt.LightSensor;
 import lejos.nxt.SensorPort;
 import lejos.util.Delay;
-import rp.config.RobotConfigs;
-import rp.config.WheeledRobotConfiguration;
-import rp.systems.WheeledRobotSystem;
 /**
  * Class for testing the light values
  * nothing interesting here
