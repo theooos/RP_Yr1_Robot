@@ -46,7 +46,7 @@ private ClientReceiver receiver;
  		    	if(comm instanceof Move){
  		    		RobotMotion.move((Move)comm);
  		    	}
- 		    	else if(comm instanceof SingleTask || comm instanceof DropOffPoint){
+ 		    	else if(comm instanceof SingleTask || comm instanceof DropOffPoint || comm instanceof RobotInfo){
  		    		theInterface.add(comm);
  		    	}
  		    	else if(comm instanceof RobotInfo){

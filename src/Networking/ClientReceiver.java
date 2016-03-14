@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import Objects.Sendable.Move;
+import Objects.Sendable.RobotInfo;
 import Objects.Sendable.SendableObject;
 import Objects.Sendable.SingleTask;
 
@@ -81,6 +82,9 @@ public class ClientReceiver extends Thread {
 			}
 			else if(type.equals("SingleTask")){
 				newObj = new SingleTask((String) parameters[0].toString(), (Integer) parameters[1], new Point((Integer) parameters[2], (Integer) parameters[3]));
+			}
+			else if(type.equals("RobotInfo")){
+				newObj = new RobotInfo((String) parameters[0]);
 			}
 			
 			if(newObj == null){
