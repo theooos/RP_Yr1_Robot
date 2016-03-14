@@ -8,11 +8,10 @@ import lejos.nxt.LightSensor;
 import lejos.nxt.Motor;
 import lejos.nxt.SensorPort;
 import lejos.robotics.navigation.DifferentialPilot;
-import lejos.util.Delay;
 import rp.config.WheeledRobotConfiguration;
 import rp.robotics.DifferentialDriveRobot;
 
-public class TestMovement {
+public class RobotMotion {
 
 	private static LightSensor left = new LightSensor(SensorPort.S1);
 	private static LightSensor right = new LightSensor(SensorPort.S3);

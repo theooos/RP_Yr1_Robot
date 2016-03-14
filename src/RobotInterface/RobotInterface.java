@@ -1,10 +1,13 @@
 package RobotInterface;
 
+import java.awt.Point;
 import java.util.ArrayList;
 
 import Networking.ClientSender;
+import Objects.Direction;
 import Objects.Sendable.CompleteReport;
 import Objects.Sendable.DropOffPoint;
+import Objects.Sendable.RobotInfo;
 import Objects.Sendable.SingleTask;
 import Objects.Sendable.StartUpItem;
 import lejos.nxt.Button;
@@ -25,8 +28,8 @@ public class RobotInterface {
 	
 	public RobotInterface(String robotName) {
 		itemsHeld = new ArrayList<String>();
-		StartUpItem sui = getDetails(robotName);
-		ClientSender.send(sui);
+		RobotInfo ri = getDetails(robotName);
+		ClientSender.send(ri);
 	}
 	
 	/**
@@ -34,10 +37,11 @@ public class RobotInterface {
 	 * @param name the robot's name
 	 * @return A StartUpItem containing name, x, y and direction
 	 */
-	private StartUpItem getDetails(String name) {
+	private RobotInfo getDetails(String name) {
 		int xVal = 0; //initial values of x, y and location
 		int yVal = 0;
 		char d = 'N';
+		Direction dir = Direction.NORTH;
 		LCD.drawString("x: " + xVal, 2, 1); //output the instructions to the screen
 		LCD.drawString("y: " + xVal, 2, 3);
 		LCD.drawString("Direction: " + d, 2, 5);
@@ -60,15 +64,19 @@ public class RobotInterface {
 					LCD.clear(5);
 					if(d == 'N') { //change appropriately
 						d = 'E';
+						dir = Direction.EAST;
 					}
 					else if(d == 'E') {
 						d = 'S';
+						dir = Direction.SOUTH;
 					}
 					else if(d == 'S') {
 						d = 'W';
+						dir = Direction.WEST;
 					}
 					else {
 						d = 'N';
+						dir = Direction.NORTH;
 					}
 					LCD.drawString("Direction: " + d, 2, 5);
 				}
@@ -88,15 +96,19 @@ public class RobotInterface {
 					LCD.clear(5);
 					if(d == 'N') {
 						d = 'W';
+						dir = Direction.WEST;
 					}
 					else if(d == 'E') {
 						d = 'N';
+						dir = Direction.NORTH;
 					}
 					else if(d == 'S') {
 						d = 'E';
+						dir = Direction.EAST;
 					}
 					else {
 						d = 'S';
+						dir = Direction.SOUTH;
 					}
 					LCD.drawString("Direction: " + d, 2, 5);
 				}
@@ -109,7 +121,7 @@ public class RobotInterface {
 			}
 		}
 		LCD.clear();
-		return new StartUpItem(name, xVal, yVal, d);
+		return new RobotInfo(name, new Point(xVal, yVal), dir);
 	}
 	
 	/**
