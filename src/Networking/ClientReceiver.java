@@ -84,7 +84,7 @@ public class ClientReceiver extends Thread {
 				newObj = new SingleTask((String) parameters[0].toString(), (Integer) parameters[1], new Point((Integer) parameters[2], (Integer) parameters[3]));
 			}
 			else if(type.equals("RobotInfo")){
-				newObj = new RobotInfo((String) parameters[0]);
+				newObj = new RobotInfo((String) parameters[0].toString());
 			}
 			
 			if(newObj == null){
