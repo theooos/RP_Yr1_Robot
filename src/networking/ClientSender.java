@@ -1,18 +1,23 @@
-package Networking;
+package networking;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
 
 import Objects.Sendable.SendableObject;
 
+
+/**
+ * Sends to the server
+ *  
+ */
 public class ClientSender {
-	
+
 	private static DataOutputStream toServer;
-	
+
 	public static void setStream(DataOutputStream stream){
 		toServer = stream;
 	}
-	
+
 	/**
 	 * Only done so that access to the commands ArrayList is always synchronised.
 	 * @param comm The command to add.

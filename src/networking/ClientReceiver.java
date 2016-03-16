@@ -1,4 +1,4 @@
-package Networking;
+package networking;
 
 import java.awt.Point;
 import java.io.DataInputStream;
@@ -10,6 +10,10 @@ import Objects.Sendable.RobotInfo;
 import Objects.Sendable.SendableObject;
 import Objects.Sendable.SingleTask;
 
+
+/**
+ * Receive from the server
+ */
 public class ClientReceiver extends Thread {
 
 	private boolean alive = true;
@@ -32,9 +36,8 @@ public class ClientReceiver extends Thread {
 			} catch (InterruptedException e) {
 				System.out.println("INTERRUPTED.");
 			}
-			
+
 			try {
-//				out("About to read.");
 				String fullComm = fromServer.readUTF();
 				Thread.sleep(1000);
 				Object[] splitComm = Splitter.split(fullComm);
@@ -44,7 +47,7 @@ public class ClientReceiver extends Thread {
 					objParams[i-1] = splitComm[i];
 				}
 				figureType(type, objParams);				
-				
+
 			} catch (IOException e) {
 				out("MyListener noticed the server died. Shutting everything down.");
 				System.exit(3);
@@ -86,7 +89,7 @@ public class ClientReceiver extends Thread {
 			else if(type.equals("RobotInfo")){
 				newObj = new RobotInfo((String) parameters[0].toString());
 			}
-			
+
 			if(newObj == null){
 				out("Error creating new object. Didn't know how to deal with: " + type);
 			}
@@ -95,7 +98,7 @@ public class ClientReceiver extends Thread {
 			}
 		}
 	}
-	
+
 	/**
 	 * Ends the thread.
 	 */
@@ -104,7 +107,7 @@ public class ClientReceiver extends Thread {
 	}
 
 	// ************************ ARRAYLIST ACCESSORS **************************
-	
+
 	/**
 	 * Only done so that access to the commandsForInterface ArrayList is always
 	 * synchronised.
@@ -114,7 +117,7 @@ public class ClientReceiver extends Thread {
 	synchronized private void addComm(SendableObject comm) {
 		commands.add(comm);
 	}
-	
+
 	/**
 	 * Takes the next message from the message list.
 	 * @return
@@ -130,7 +133,7 @@ public class ClientReceiver extends Thread {
 	}
 
 	// ******************** HELPER COMMANDS **********************
-	
+
 	private void out(Object n) {
 		System.out.println("" + n);
 	}

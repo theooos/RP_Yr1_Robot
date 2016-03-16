@@ -1,4 +1,4 @@
-package RobotMotionControl;
+package robotMotionControl;
 
 import lejos.nxt.LCD;
 import lejos.nxt.LightSensor;

@@ -1,9 +1,8 @@
-package RobotInterface;
+package robotInterface;
 
 import java.awt.Point;
 import java.util.ArrayList;
 
-import Networking.ClientSender;
 import Objects.Direction;
 import Objects.Sendable.CompleteReport;
 import Objects.Sendable.DropOffPoint;
@@ -14,6 +13,7 @@ import lejos.nxt.Button;
 import lejos.nxt.ButtonListener;
 import lejos.nxt.LCD;
 import lejos.util.Delay;
+import networking.ClientSender;
 
 /**
  * The class that handles the robot screen and user interaction to pick-up and drop-off items

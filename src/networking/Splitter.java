@@ -1,32 +1,30 @@
-package Networking;
+package networking;
 
 import java.util.ArrayList;
 
 /**
- * 
- * @author Simeon, Theo
- *
+ * Splits up passed messages to parse into objects
  */
 public class Splitter {
-	
+
 	public static Object[] split(String data){
-		
+
 		ArrayList<Object> list = new ArrayList<Object>();
 		int saveIndex = 0;
-		
+
 		for (int i = 0; i < data.length(); i++){
-		    char c = data.charAt(i); 
-		    if(c == ','){
-		    	String item = data.substring(saveIndex, i);
-		    	list.add(item);
-		    	saveIndex = i+1;
-		    }
-		    if(i == data.length() - 1){
-		    	String item = data.substring(saveIndex);
-		    	list.add(item);
-		    }
+			char c = data.charAt(i); 
+			if(c == ','){
+				String item = data.substring(saveIndex, i);
+				list.add(item);
+				saveIndex = i+1;
+			}
+			if(i == data.length() - 1){
+				String item = data.substring(saveIndex);
+				list.add(item);
+			}
 		}
-		
+
 		for(int i = 0; i < list.size(); i++){
 			Object currItem = list.get(i);
 			boolean changed = false;
@@ -50,10 +48,10 @@ public class Splitter {
 				}
 			}
 		}
-		
+
 		return list.toArray();
 	}
-	
+
 	/**
 	 * Trims class getName() from e.g. java.lang.String to String
 	 * @param fullClass
@@ -62,12 +60,12 @@ public class Splitter {
 	public static String getClassName(String fullClass){
 		String classTitle = "";
 		for (int i = 0; i < fullClass.length(); i++){
-		    char c = fullClass.charAt(i); 
-		    if(c == '.'){
-		    	classTitle = "";
-		    } else {
-		    	classTitle += c;
-		    }
+			char c = fullClass.charAt(i); 
+			if(c == '.'){
+				classTitle = "";
+			} else {
+				classTitle += c;
+			}
 		}
 		return classTitle;
 	}

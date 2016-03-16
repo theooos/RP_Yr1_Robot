@@ -1,9 +1,8 @@
- package Objects;
+package Objects;
 
+import java.awt.*;
 
- import java.awt.Point;
-
- /**
+/**
  * SHARED OBJECTS
  * Used to represent a single item: It's location, weight and reward.
  */
@@ -13,18 +12,17 @@ public class Item {
 	private final double reward;
 	private final double weight;
 
-    /**
-     * Create a new item.
-     * @param location the coordinates of the item pick up
-     * @param reward The reward for this item.
-     * @param weight The weight for this item.
-     */
+	/**
+	 * Create a new item.
+	 * @param location the coordinates of the item pick up
+	 * @param reward The reward for this item.
+	 * @param weight The weight for this item.
+	 */
 	public Item(Point location, double reward, double weight) {
 		this.location = location;
 		this.reward = reward;
 		this.weight = weight;
 	}
-
 
 	/**
 	 * Get the location.
@@ -33,7 +31,7 @@ public class Item {
 	public Point getLocation(){
 		return location;
 	}
-	
+
 	/**
 	 * Get reward of the item.
 	 * @return The reward.

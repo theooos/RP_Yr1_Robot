@@ -1,8 +1,11 @@
 package Objects.Sendable;
 
-
+/**
+ * SHARED OBJECTS
+ * A report sent when a job has been completed
+ */
 public class CompleteReport implements SendableObject {
-	
+
 	private Boolean isPickup;
 	private Boolean wasCompleted;	
 
@@ -10,7 +13,7 @@ public class CompleteReport implements SendableObject {
 		this.isPickup = isPickup;
 		this.wasCompleted = wasCompleted;
 	}
-	
+
 	/**
 	 * Get if item is picked up.
 	 * @return If pickup.
@@ -18,7 +21,7 @@ public class CompleteReport implements SendableObject {
 	public Boolean getIsPickup() {
 		return isPickup;
 	}
-	
+
 	/**
 	 * Get if completed.
 	 * @return If completed.
@@ -32,7 +35,7 @@ public class CompleteReport implements SendableObject {
 	public String toString() {
 		return "CompleteReport [isPickup=" + isPickup + ", wasCompleted=" + wasCompleted + "]";
 	}
-	
+
 	/**
 	 * Gets the parameters in csv format
 	 * @return all parameters, seperated by commas
@@ -40,5 +43,5 @@ public class CompleteReport implements SendableObject {
 	public String parameters() {
 		return ("CompleteReport," + isPickup+","+wasCompleted);
 	}
-	
+
 }

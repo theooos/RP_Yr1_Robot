@@ -7,24 +7,24 @@ import java.awt.Point;
  * Used to represent a single task: what item is needed and how many are needed.
  */
 public class SingleTask implements SendableObject {
-	
+
 	private String itemID;
 	private int quantity;
-    private Point location;
+	private Point location;
 
-    /**
-     * Create a new single task.
-     * @param itemID The item id.
-     * @param quantity The quantity of the item.
-     */
+	/**
+	 * Create a new single task.
+	 * @param itemID The item id.
+	 * @param quantity The quantity of the item.
+	 */
 	public SingleTask(String itemID, int quantity, Point location) {
-		
+
 		this.itemID = itemID;
 		this.quantity = quantity;
-        this.location = location;
-		
+		this.location = location;
+
 	}
-	
+
 	/**
 	 * Get the item id.
 	 * @return The item id.
@@ -32,7 +32,7 @@ public class SingleTask implements SendableObject {
 	public String getItemID() {
 		return itemID;
 	}
-	
+
 	/**
 	 * Get the quantity.
 	 * @return The quantity.
@@ -54,7 +54,7 @@ public class SingleTask implements SendableObject {
 	public String toString() {
 		return "SingleTask [item=" + itemID + ", quantity=" + quantity + ", location=" + location + "]";
 	}
-	
+
 	/**
 	 * Gets the parameters in csv format.
 	 * @return all parameters, seperated by commas.

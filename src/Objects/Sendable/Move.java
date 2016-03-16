@@ -2,17 +2,19 @@ package Objects.Sendable;
 
 import java.awt.Point;
 
+/**
+ * SHARED OBJECTS
+ * Represents a signal move for the Robot to execute
+ */
 public class Move implements SendableObject {
 
 	private char direction;
 	private Point nextLocation;
 
-
 	public Move(char direction, Point nextLocation) {
 		this.direction = direction;
 		this.nextLocation = nextLocation;
 	}
-
 
 	/**
 	 * Get the direction.

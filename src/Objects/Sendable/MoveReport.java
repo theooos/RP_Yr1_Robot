@@ -1,6 +1,5 @@
 package Objects.Sendable;
 
-
 /**
  * SHARED OBJECTS
  * Used to represent a move: if the robot has moved.
