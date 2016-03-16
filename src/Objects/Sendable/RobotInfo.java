@@ -26,6 +26,6 @@ public class RobotInfo implements SendableObject {
 
 	@Override
 	public String parameters() {
-		return "RobotInfo," + name + "," + location.getX() + "," + location.getY() + "," + direction;
+		return "RobotInfo," + name + "," + (int)location.getX() + "," + (int)location.getY() + "," + direction;
 	}
 }

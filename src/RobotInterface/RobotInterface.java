@@ -38,6 +38,7 @@ public class RobotInterface {
 	 * @return A StartUpItem containing name, x, y and direction
 	 */
 	private RobotInfo getDetails(String name) {
+		LCD.clear();
 		int xVal = 0; //initial values of x, y and location
 		int yVal = 0;
 		char d = 'N';
