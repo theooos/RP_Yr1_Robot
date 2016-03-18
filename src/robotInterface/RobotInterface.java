@@ -166,6 +166,7 @@ public class RobotInterface {
 				//
 			}
 		});
+		LCD.clear();
 		boolean correct = confirm(where.getX(), where.getY());
 		if(correct) { //if the location is correct
 			LCD.drawString("I have:", 1, 0);
@@ -212,6 +213,7 @@ public class RobotInterface {
 	private void pickup(SingleTask item) {
 		String id = item.getItemID();
 		int quantity = item.getQuantity();
+		LCD.clear();
 		boolean correct = confirm((int)item.getLocation().getX(), (int)item.getLocation().getY());
 		boolean cancelled = false;
 		if(correct) {		//^ dummy data as I don't know currently how I will get the location
