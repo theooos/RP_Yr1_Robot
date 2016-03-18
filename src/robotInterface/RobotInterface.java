@@ -1,4 +1,4 @@
-package robotInterface;
+package robotInterface; 
 
 import java.awt.Point;
 import java.util.ArrayList;
@@ -12,6 +12,7 @@ import Objects.Sendable.StartUpItem;
 import lejos.nxt.Button;
 import lejos.nxt.ButtonListener;
 import lejos.nxt.LCD;
+import lejos.nxt.Sound;
 import lejos.util.Delay;
 import networking.ClientSender;
 
@@ -212,29 +213,38 @@ public class RobotInterface {
 		String id = item.getItemID();
 		int quantity = item.getQuantity();
 		boolean correct = confirm((int)item.getLocation().getX(), (int)item.getLocation().getY());
+		boolean cancelled = false;
 		if(correct) {		//^ dummy data as I don't know currently how I will get the location
 			int x = 2;
 			int y = 3;
 			LCD.drawString("I need " + quantity + "x " + id + ".", x, y); //Output message
+			LCD.drawString("ENTER: add", 0, y+3);
+			LCD.drawString("ESC: cancel", 0, y+4);
 			int i = quantity;
 			int pressed;
-			while(i > 0) {
-				pressed = Button.waitForAnyPress(); //wait for button to be pressed and store which it is
-				LCD.clear();						
-				if(pressed == Button.ID_ENTER) { //if it is the enter button
+			while(i > 0 && !cancelled) {
+				pressed = Button.waitForAnyPress(10000); //wait for button to be pressed and store which it is
+				LCD.clear(y);		
+				if(pressed == 0) {
+					Sound.beep();
+				}
+				else if(pressed == Button.ID_ENTER) { //if it is the enter button
 					i--; //decrease the number needed
 				}
-				else { //otherwise
-					LCD.drawString("Press enter", 3, y+1); //Instruction
-					LCD.drawString("to add", 5, y+2);
-					Delay.msDelay(1000); //display warning message
-					LCD.clear(); 
+				else if(pressed = Button.ID_ESCAPE) { //otherwise
+					cancelled = true;
 				}
 				LCD.drawString("I need " + i + "x " + id + ".", x, y); //Update on screen how many needed
 			}
-			itemsHeld.add(quantity + "x " + id);
 			LCD.clear();
-			CompleteReport report = new CompleteReport(true, true); //to add to CommandHolder
+			CompleteReport report;
+			if(!cancelled) {
+				itemsHeld.add(quantity + "x " + id);
+				report = new CompleteReport(true, true); //to add to CommandHolder
+			}
+			else {
+				report = new CompleteReport(true, false);
+			}
 			ClientSender.send(report);
 		}
 		else { //if the location is incorrect, send a report saying the pickup wasn't completed
@@ -254,6 +264,7 @@ public class RobotInterface {
 		boolean confirmed = false;
 		boolean ySelected = true;
 		int pressed;
+		Sound.twoBeeps();
 		while(!confirmed) { //while the location hasn't been confirmed
 			LCD.drawString("Am I at (" + x + ", " + y + ")?", 1, 3); //output asking if it is correct
 			if(ySelected) {	//if yes is currently selected
