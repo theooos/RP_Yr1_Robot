@@ -218,8 +218,8 @@ public class RobotInterface {
 			int x = 2;
 			int y = 3;
 			LCD.drawString("I need " + quantity + "x " + id + ".", x, y); //Output message
-			LCD.drawString("ENTER: add", 0, y+3);
-			LCD.drawString("ESC: cancel", 0, y+4);
+			LCD.drawString("ENTER: add", 0, 6);
+			LCD.drawString("ESC: cancel", 0, 7);
 			int i = quantity;
 			int pressed;
 			while(i > 0 && !cancelled) {
@@ -231,7 +231,7 @@ public class RobotInterface {
 				else if(pressed == Button.ID_ENTER) { //if it is the enter button
 					i--; //decrease the number needed
 				}
-				else if(pressed = Button.ID_ESCAPE) { //otherwise
+				else if(pressed == Button.ID_ESCAPE) { //otherwise
 					cancelled = true;
 				}
 				LCD.drawString("I need " + i + "x " + id + ".", x, y); //Update on screen how many needed
@@ -288,19 +288,19 @@ public class RobotInterface {
 		return ySelected; //after confirmation, return whether yes was selected
 	}
 
-	/*public static void main(String[] args) { //entirely used for testing
-		Button.waitForAnyPress();
+	public static void main(String[] args) { //entirely used for testing
+		/*Button.waitForAnyPress();
 		CommandHolder h = new CommandHolder();
-		RobotInterface i = new RobotInterface("dshfjdshf", h);
+		RobotInterface i = new RobotInterface("dshfjdshf");
 		Delay.msDelay(1000);
-		i.add(new SingleTask("aa", 5, 1, 2));
+		i.add(new SingleTask("aa", 5, new Point(1, 2)));
 		Delay.msDelay(1000);
 		i.add(new SingleTask("ac", 3, 6, 6));
 		Delay.msDelay(1000);
 		i.add(new SingleTask("ae", 4, 4, 2));
 		Delay.msDelay(1000);
-		i.add(new DropoffPoint(6, 2));
+		i.add(new DropoffPoint(6, 2));*/
 		
-	}*/
+	}
 
 }
