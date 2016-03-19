@@ -94,7 +94,6 @@ public class RobotMotion {
 	private static void generateLightValues(){
 		leftValue = left.getLightValue();
 		rightValue = right.getLightValue();
-		System.out.println("L: " + leftValue + " R: " + rightValue);
 	}
 
 }

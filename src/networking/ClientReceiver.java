@@ -5,6 +5,7 @@ import java.io.DataInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import Objects.Sendable.DropOffPoint;
 import Objects.Sendable.Move;
 import Objects.Sendable.RobotInfo;
 import Objects.Sendable.SendableObject;
@@ -88,6 +89,9 @@ public class ClientReceiver extends Thread {
 			}
 			else if(type.equals("RobotInfo")){
 				newObj = new RobotInfo((String) parameters[0].toString());
+			}
+			else if(type.equals("DropOffPoint")){
+				newObj = new DropOffPoint((int) parameters[0], (int) parameters[1]);
 			}
 
 			if(newObj == null){

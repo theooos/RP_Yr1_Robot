@@ -49,7 +49,7 @@ public class DropOffPoint implements SendableObject {
 	 * @return all parameters, seperated by commas
 	 */
 	public String parameters() {
-		return ("DropoffPoint," + x + y);
+		return ("DropOffPoint," + x + "," +  y);
 	}
 	
 	public String toString() {
