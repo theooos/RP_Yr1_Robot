@@ -26,11 +26,13 @@ import networking.ClientSender;
 public class RobotInterface {
 	
 	private ArrayList<String> itemsHeld;
+	private String robotName;
 	
-	public RobotInterface(String robotName) {
+	public RobotInterface(String rName) {
+		robotName = rName;
 		itemsHeld = new ArrayList<String>();
-		RobotInfo ri = getDetails(robotName);
-		ClientSender.send(ri);
+		getDetails();
+		//ClientSender.send(ri);
 	}
 	
 	/**
@@ -38,7 +40,7 @@ public class RobotInterface {
 	 * @param name the robot's name
 	 * @return A StartUpItem containing name, x, y and direction
 	 */
-	private RobotInfo getDetails(String name) {
+	private void getDetails() {
 		LCD.clear();
 		int xVal = 0; //initial values of x, y and location
 		int yVal = 0;
@@ -123,7 +125,7 @@ public class RobotInterface {
 			}
 		}
 		LCD.clear();
-		return new RobotInfo(name, new Point(xVal, yVal), dir);
+		ClientSender.send(new RobotInfo(robotName, new Point(xVal, yVal), dir));
 	}
 	
 	/**
@@ -193,7 +195,7 @@ public class RobotInterface {
 			while(pressed != Button.ID_ENTER) {		//if it isn't enter
 				pressed = Button.waitForAnyPress();	//keep waiting, until enter is pressed
 			}
-			CompleteReport report = new CompleteReport(false, true);
+			CompleteReport report = new CompleteReport(false, true, false);
 			ClientSender.send(report);
 			LCD.clear();
 			while(!itemsHeld.isEmpty()) {
@@ -201,7 +203,8 @@ public class RobotInterface {
 			}
 		}
 		else { //if the location isn't correct
-			CompleteReport report = new CompleteReport(false, false); //return saying drop-off not completed
+			getDetails();
+			CompleteReport report = new CompleteReport(false, false, false); //return saying drop-off not completed
 			ClientSender.send(report);
 		}
 		LCD.clear();
@@ -244,15 +247,16 @@ public class RobotInterface {
 			CompleteReport report;
 			if(!cancelled) {
 				itemsHeld.add(quantity + "x " + id);
-				report = new CompleteReport(true, true); //to add to CommandHolder
+				report = new CompleteReport(true, true, false); //to add to CommandHolder
 			}
 			else {
-				report = new CompleteReport(true, false);
+				report = new CompleteReport(true, false, true);
 			}
 			ClientSender.send(report);
 		}
 		else { //if the location is incorrect, send a report saying the pickup wasn't completed
-			CompleteReport report = new CompleteReport(true, false);
+			getDetails();
+			CompleteReport report = new CompleteReport(true, false, false);
 			ClientSender.send(report);
 		}
 		LCD.clear();
