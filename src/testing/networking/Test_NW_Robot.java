@@ -1,10 +1,11 @@
 package testing.networking;
 
+import java.awt.Point;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 
+import Objects.Direction;
 import Objects.Sendable.DropOffPoint;
-import Objects.Sendable.Move;
 import Objects.Sendable.RobotInfo;
 import Objects.Sendable.SendableObject;
 import Objects.Sendable.SingleTask;
@@ -14,15 +15,13 @@ import main.RunRobot;
 import networking.ClientReceiver;
 import networking.ClientSender;
 import robotInterface.RobotInterface;
-import robotMotionControl.RobotMotion;
 
-public class Test_Networking_Robot {
+public class Test_NW_Robot {
 
 	private String name;
 	private ClientReceiver receiver;
-	private RobotInterface theInterface;
 
-	public Test_Networking_Robot() {
+	public Test_NW_Robot() {
 		System.out.println("TESTING: Waiting for Bluetooth connection...");
 		BTConnection connection = Bluetooth.waitForConnection();
 		System.out.println("OK!");
@@ -33,22 +32,32 @@ public class Test_Networking_Robot {
 		ClientSender.setStream(out);
 		receiver = new ClientReceiver(in);  
 		receiver.start();
-
+		
 		while (receiver.isAlive()) {			
 
 			// Goes through all available instructions and executes them.
 			SendableObject comm = null;
-
+			
 			while((comm = receiver.popCommand()) != null)
 			{
-				if(comm instanceof SingleTask || comm instanceof DropOffPoint) {
+				if(comm instanceof SingleTask) {
 					// Sends object back up to the server
 					System.out.println("Successfully received object");
 					System.out.println("OBJECT: " + comm.toString());
 					System.out.println("SENDING OBJECT BACK TO SERVER");
-					ClientSender.send(comm);
+					ClientSender.send((SingleTask)comm);
+					System.out.println("SENT THE ITEM BACK");
+				}
+				if(comm instanceof RobotInfo) {
+					// Sends object back up to the server
+					name = ((RobotInfo)comm).getName();
+					
+					RobotInfo newInfo = new RobotInfo(name, new Point(1,1), Direction.NORTH);
+					
+					ClientSender.send(newInfo);
 				}
 				else {
+					System.out.println("Test_NW Line59");
 					return;
 				}
 			}
@@ -61,7 +70,7 @@ public class Test_Networking_Robot {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		new RunRobot(args);
+		new Test_NW_Robot();
 	}
 	
 	// ********************** HELPER METHODS *********************

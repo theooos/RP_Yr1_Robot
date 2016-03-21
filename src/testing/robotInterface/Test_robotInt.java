@@ -8,9 +8,9 @@ import lejos.nxt.Button;
 import lejos.util.Delay;
 import robotInterface.RobotInterface;
 
-public class Test_robotInterface {
+public class Test_robotInt {
 
-	public Test_robotInterface() {
+	public Test_robotInt() {
 		// TODO Auto-generated constructor stub
 	}
 
