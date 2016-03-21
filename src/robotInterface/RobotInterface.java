@@ -125,7 +125,7 @@ public class RobotInterface {
 			}
 		}
 		LCD.clear();
-		ClientSender.send(new RobotInfo(robotName, new Point(xVal, yVal), dir));
+		//ClientSender.send(new RobotInfo(robotName, new Point(xVal, yVal), dir));
 	}
 	
 	/**
@@ -196,7 +196,7 @@ public class RobotInterface {
 				pressed = Button.waitForAnyPress();	//keep waiting, until enter is pressed
 			}
 			CompleteReport report = new CompleteReport(false, true, false);
-			ClientSender.send(report);
+			//ClientSender.send(report);
 			LCD.clear();
 			while(!itemsHeld.isEmpty()) {
 				itemsHeld.remove(0);
@@ -205,7 +205,7 @@ public class RobotInterface {
 		else { //if the location isn't correct
 			getDetails();
 			CompleteReport report = new CompleteReport(false, false, false); //return saying drop-off not completed
-			ClientSender.send(report);
+			//ClientSender.send(report);
 		}
 		LCD.clear();
 	}
@@ -252,12 +252,12 @@ public class RobotInterface {
 			else {
 				report = new CompleteReport(true, false, true);
 			}
-			ClientSender.send(report);
+			//ClientSender.send(report);
 		}
 		else { //if the location is incorrect, send a report saying the pickup wasn't completed
 			getDetails();
 			CompleteReport report = new CompleteReport(true, false, false);
-			ClientSender.send(report);
+			//ClientSender.send(report);
 		}
 		LCD.clear();
 	}
