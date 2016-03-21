@@ -17,12 +17,12 @@ import lejos.util.Delay;
 import networking.ClientSender;
 
 /**
+ * MODIFIED CLASS FOR THE PURPOSE OF TESTING
+ * 
  * The class that handles the robot screen and user interaction to pick-up and drop-off items
  * @author rkelly
  *
  */
-//Many errors due to dependent classes not being available
-//Many commented lines - all to do with communication, to be sorted 10/3
 public class RobotInterface {
 	
 	private ArrayList<String> itemsHeld;

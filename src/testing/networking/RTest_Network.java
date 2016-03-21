@@ -16,48 +16,62 @@ import networking.ClientReceiver;
 import networking.ClientSender;
 import robotInterface.RobotInterface;
 
-public class Test_NW_Robot {
+/**
+ * TEST FILE: Starts the bluetooth connection with the server so that an object can be received and sent back
+ */
+public class RTest_Network {
 
 	private String name;
 	private ClientReceiver receiver;
 
-	public Test_NW_Robot() {
+	public RTest_Network() {
+
+		// Starting the bluetooth connectioon
 		System.out.println("TESTING: Waiting for Bluetooth connection...");
 		BTConnection connection = Bluetooth.waitForConnection();
-		System.out.println("OK!");
+		System.out.println("OK!"); // Connection successful
 
+		// Opening the data streams
 		DataInputStream in = connection.openDataInputStream();
 		DataOutputStream out = connection.openDataOutputStream();
-
 		ClientSender.setStream(out);
 		receiver = new ClientReceiver(in);  
 		receiver.start();
-		
+
+		// Whilst the server is alive, wait for objects to be received
 		while (receiver.isAlive()) {			
 
 			// Goes through all available instructions and executes them.
 			SendableObject comm = null;
-			
+
 			while((comm = receiver.popCommand()) != null)
 			{
+
+				// Waits for an instance of SingleTask, which is the dummy object that's being sent down
 				if(comm instanceof SingleTask) {
-					// Sends object back up to the server
-					System.out.println("Successfully received object");
-					System.out.println("OBJECT: " + comm.toString());
-					System.out.println("SENDING OBJECT BACK TO SERVER");
+
+					// Prints that the object was received successfully
+					System.out.println("Successfully received object!");
+					System.out.println("Received: " + comm.toString());
+					System.out.println("SENDING OBJECT BACK TO SERVER!");
+
+					// Sends the object back to the server
 					ClientSender.send((SingleTask)comm);
-					System.out.println("SENT THE ITEM BACK");
+					System.out.println("/n SENT THE ITEM BACK!");
 				}
+
+				// RobotInfo is used to instantiate the connection
 				if(comm instanceof RobotInfo) {
-					// Sends object back up to the server
+
+					// Sets the name of the robot
 					name = ((RobotInfo)comm).getName();
-					
+
+					// Sends it back up to the server
 					RobotInfo newInfo = new RobotInfo(name, new Point(1,1), Direction.NORTH);
-					
 					ClientSender.send(newInfo);
 				}
 				else {
-					System.out.println("Test_NW Line59");
+					System.out.println("RTest_Network: Line ~71"); // DEBUG Line
 					return;
 				}
 			}
@@ -70,9 +84,9 @@ public class Test_NW_Robot {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		new Test_NW_Robot();
+		new RTest_Network();
 	}
-	
+
 	// ********************** HELPER METHODS *********************
 
 	/**

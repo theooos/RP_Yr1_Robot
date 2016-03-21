@@ -13,6 +13,7 @@ import Objects.Sendable.SingleTask;
 
 
 /**
+ * MODIFIED CLASS FOR THE PURPOSE OF TESTING
  * Receive from the server
  */
 public class ClientReceiver extends Thread {
