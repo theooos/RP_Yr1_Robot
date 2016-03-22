@@ -7,11 +7,13 @@ package Objects.Sendable;
 public class CompleteReport implements SendableObject {
 
 	private Boolean isPickup;
-	private Boolean wasCompleted;	
+	private Boolean wasCompleted;
+	private Boolean wasCancelled;
 
-	public CompleteReport(Boolean isPickup, Boolean wasCompleted) {
+	public CompleteReport(Boolean isPickup, Boolean wasCompleted, Boolean wasCancelled) {
 		this.isPickup = isPickup;
 		this.wasCompleted = wasCompleted;
+		this.wasCancelled = wasCancelled;
 	}
 
 	/**
@@ -29,11 +31,19 @@ public class CompleteReport implements SendableObject {
 	public Boolean wasCompleted() {
 		return wasCompleted;
 	}
+	
+	/**
+	 * Get if the task was cancelled
+	 * @return if cancelled
+	 */
+	public Boolean wasCancelled() {
+		return wasCancelled;
+	}
 
 	// toString method for debugging purposes
 	@Override
 	public String toString() {
-		return "CompleteReport [isPickup=" + isPickup + ", wasCompleted=" + wasCompleted + "]";
+		return "CompleteReport [isPickup=" + isPickup + ", wasCompleted=" + wasCompleted + ", wasCancelled=" + wasCancelled + "]";
 	}
 
 	/**
@@ -41,7 +51,7 @@ public class CompleteReport implements SendableObject {
 	 * @return all parameters, seperated by commas
 	 */
 	public String parameters() {
-		return ("CompleteReport," + isPickup+","+wasCompleted);
+		return ("CompleteReport,"+isPickup+","+wasCompleted+","+wasCancelled);
 	}
 
 }
