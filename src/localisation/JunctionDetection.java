@@ -1,5 +1,6 @@
 package localisation;
 
+import Objects.Direction;
 import lejos.nxt.LCD;
 import lejos.nxt.LightSensor;
 import lejos.nxt.Sound;
@@ -7,7 +8,6 @@ import lejos.nxt.addon.OpticalDistanceSensor;
 import lejos.robotics.navigation.DifferentialPilot;
 import lejos.robotics.subsumption.Behavior;
 import lejos.util.Delay;
-import rp.robotics.mapping.MapUtils;
 
 /**
  * Behaviour for detecting junctions
@@ -26,7 +26,7 @@ public class JunctionDetection implements Behavior {
 	private int WEST = 1;
 	private int SOUTH = 2;
 	private int EAST = 3;
-	private float robotDirection = NORTH;
+	private int robotDirection = NORTH;
 	private float NORTH_DISTANCE;
 	private float SOUTH_DISTANCE;
 	private float WEST_DISTANCE;
@@ -35,8 +35,8 @@ public class JunctionDetection implements Behavior {
 	private boolean firstTime=false;
 	private float heading;
 	
-	private ProbableLocations locs = new ProbableLocations(MapUtils.createRealWarehouse());
-	private float cellSize = locs.getCellSize();
+	//private ArrayList<PosProb> Localisation.locsArray;
+	private float cellSize = Localisation.locs.getCellSize();
 	
 	private OpticalDistanceSensor ranger;
 	
@@ -46,9 +46,11 @@ public class JunctionDetection implements Behavior {
 		this.pilot=pilot;
 		this.ranger=distanceSensor;
 		this.threshold = threshold;
+		//this.Localisation.locsArray = Localisation.locsArray;
+		//Localisation.locs.setArray(this.Localisation.locsArray);
 		pilot.setTravelSpeed(speed);
 	}
-	/**
+	/**	
 	 * Generates calibrated values
 	 * On a black line = 45
 	 * Not on a black line = 35			
@@ -58,7 +60,7 @@ public class JunctionDetection implements Behavior {
 	public boolean takeControl(){
 		
 		generateLightValues();
-		if((leftValue < threshold) && (rightValue < threshold)){
+		if((leftValue < threshold) && (rightValue < threshold) && Localisation.locs.size()>1){
 			return true;
 		}
 		
@@ -68,19 +70,21 @@ public class JunctionDetection implements Behavior {
 
 	public void action() {
 		pilot.travel(0.1f);
-		//LCD.drawString(ranger.getRange() + " " + locs.getCellSize() , 0, 6);
-		if(!firstTime || ranger.getRange()<locs.getCellSize()){
+		//LCD.drawString(ranger.getRange() + " " + Localisation.locs.getCellSize() , 0, 6);
+		if(!firstTime || ranger.getRange()<Localisation.locs.getCellSize()){
 			
 			for(int i=0;i<4;i++){
 				
 				//LCD.clear();
-				//LCD.drawString(+ locs.size() + "      " + ranger.getRange(), 0, 7);
-				checkEnd(locs.size());
-				executeMove(Directions.LEFT);
-				Delay.msDelay(100);
-//				if(locs.size() < 7){
-//					for(int i1 = 0; i1 < locs.size(); i1++){
-//						//LCD.drawString(locs.getPoints(i1).getxCoord() + " " + locs.getPoints(i1).getyCoord(), 0, i1+1);
+				//LCD.drawString(+ Localisation.locs.size() + "      " + ranger.getRange(), 0, 7);
+				if(checkEnd(Localisation.locs.size()))
+					return;
+				executeMove(RotationDirections.LEFT);
+				Delay.msDelay(1000);
+//				if(Localisation.locs.size() < 7){
+//							
+			}for(int i1 = 0; i1 < Localisation.locs.size(); i1++){
+//						//LCD.drawString(Localisation.locs.getPoints(i1).getxCoord() + " " + Localisation.locs.getPoints(i1).getyCoord(), 0, i1+1);
 //					}
 //				}
 //				Delay.msDelay(3000);
@@ -91,9 +95,10 @@ public class JunctionDetection implements Behavior {
 			firstTime = true;
 		}
 		
-		checkEnd(locs.size());
+		if(checkEnd(Localisation.locs.size()))
+			return;
 		
-		if(ranger.getRange()<locs.getCellSize()){
+		if(ranger.getRange()<Localisation.locs.getCellSize()){
 			//LCD.drawString("I am in with: " + ranger.getRange() , 0, 0);
 			if(heading == 90){
 				turnDecision(WEST_DISTANCE, EAST_DISTANCE);
@@ -109,14 +114,15 @@ public class JunctionDetection implements Behavior {
 			}
 			 
 		}else{
-			executeMove(Directions.FORWARD);
-			locs.updateLocations(heading);
+			executeMove(RotationDirections.FORWARD);
+			Localisation.locs.updateLocations(heading);
 		}
 		
-		checkEnd(locs.size());
-		//LCD.clear();
-		LCD.drawString("" + locs.size(), 0, 7);
-		Delay.msDelay(100);
+		if(checkEnd(Localisation.locs.size()))
+			return;
+		LCD.clear();
+		LCD.drawString("" + Localisation.locs.size(), 0, 7);
+		Delay.msDelay(1000);
 	}
 
 	@Override
@@ -141,23 +147,21 @@ public class JunctionDetection implements Behavior {
 	private void generateLightValues(){
 		leftValue = left.getLightValue();
 		rightValue = right.getLightValue();
-		//System.out.println("L: " + leftValue + " R: " + rightValue);
 	}
 	
 	private void executeMove(int move){
 		setDirections();
 		//LCD.drawString(DISTANCE + " ", 0, testCount);
-		locs.setLocations(heading, DISTANCE);
-		if(move==Directions.LEFT){
+		Localisation.locs.setLocations(heading, DISTANCE);
+		if(move==RotationDirections.LEFT){
 			
 			moveLeft();
 			if(robotDirection==EAST)
 				robotDirection=NORTH;
 			else			
 				robotDirection+=1;
-			
 		}
-		else if(move==Directions.RIGHT){
+		else if(move==RotationDirections.RIGHT){
 			moveRight();
 			if(robotDirection == NORTH)
 				robotDirection = EAST;
@@ -174,25 +178,25 @@ public class JunctionDetection implements Behavior {
 	private void turnDecision(float leftPosition, float rightPosition){
 		if(leftPosition > cellSize && rightPosition > cellSize){ 
 			if(leftPosition < rightPosition){
-				executeMove(Directions.LEFT);
-				locs.updateLocations(heading);
+				executeMove(RotationDirections.LEFT);
+				Localisation.locs.updateLocations(heading);
 			}else{
-				executeMove(Directions.RIGHT);
-				locs.updateLocations(heading);
+				executeMove(RotationDirections.RIGHT);
+				Localisation.locs.updateLocations(heading);
 			}
 		}else if(leftPosition > cellSize){
-			executeMove(Directions.LEFT);
-			locs.updateLocations(heading);
+			executeMove(RotationDirections.LEFT);
+			Localisation.locs.updateLocations(heading);
 		}else if(rightPosition > cellSize){
-			executeMove(Directions.RIGHT);
-			locs.updateLocations(heading);
+			executeMove(RotationDirections.RIGHT);
+			Localisation.locs.updateLocations(heading);
 		}else{
-			executeMove(Directions.LEFT);
-			executeMove(Directions.LEFT);
-			locs.updateLocations(heading);
+			executeMove(RotationDirections.LEFT);
+			executeMove(RotationDirections.LEFT);
+			Localisation.locs.updateLocations(heading);
 		}
-		LCD.clear();
-		LCD.drawString("h: " + heading, 0, 0);
+		//LCD.clear();
+		//LCD.drawString("h: " + heading, 0, 0);
 	}
 	
 	private void setDirections(){
@@ -218,15 +222,24 @@ public class JunctionDetection implements Behavior {
 		}
 	}
 	
-	private void checkEnd(int size){
-		if(size == 1){
-			Sound.beep();
-			LCD.drawString(locs.getPoints(0).getxCoord() + " " + locs.getPoints(0).getyCoord(), 0, 4);
-			Delay.msDelay(10000);
-			System.exit(0);
-		}else if(size == 0){
-			LCD.drawString("Error with localisation", 0, 0);
-		}
+	private boolean checkEnd(int size){
+		//LCD.drawString(Localisation.locs.getPoints(0).getxCoord() + " " + Localisation.locs.getPoints(0).getyCoord(), 0, 4);
+		return size <= 1;
+	}
+	
+	public ProbableLocations getlocs(){
+		return Localisation.locs;
+	}
+	
+	public Direction getDir(){
+		if(robotDirection==NORTH)
+			return Direction.NORTH;
+		else if(robotDirection==EAST)
+			return Direction.EAST;
+		else if(robotDirection==SOUTH)
+			return Direction.SOUTH;
+		else
+			return Direction.WEST;
 	}
 }
 

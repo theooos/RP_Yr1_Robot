@@ -25,15 +25,28 @@ import networking.ClientSender;
 //Many commented lines - all to do with communication, to be sorted 10/3
 public class RobotInterface {
 	
-	private ArrayList<String> itemsHeld;
+//	private ArrayList<String> itemsHeld;
 	private String robotName;
 	
 	public RobotInterface(String rName) {
 		robotName = rName;
-		itemsHeld = new ArrayList<String>();
+//		itemsHeld = new ArrayList<String>();
 		getDetails();
 		//ClientSender.send(ri);
 	}
+	
+	public RobotInterface(String name, Point location, Direction dir){
+		robotName = name;
+//		itemsHeld = new ArrayList<String>();
+		if (confirm((int)location.getX(), (int)location.getY())){
+			RobotInfo info = new RobotInfo(name, location, dir);
+			ClientSender.send(info);
+		}
+		else getDetails();
+	}
+	
+	
+	
 	
 	/**
 	 * Output to the screen to take in the location and direction of the robot
@@ -46,7 +59,7 @@ public class RobotInterface {
 		int yVal = 0;
 		char d = 'N';
 		Direction dir = Direction.NORTH;
-		LCD.drawString("x: " + xVal, 2, 1); //output the instructions to the screen
+		LCD.drawString("- x: " + xVal, 0, 1); //output the instructions to the screen
 		LCD.drawString("y: " + xVal, 2, 3);
 		LCD.drawString("Direction: " + d, 2, 5);
 		int which = 0; //indicator
@@ -57,12 +70,12 @@ public class RobotInterface {
 				if(which == 0) { //if we are currently editing x
 					LCD.clear(1);
 					xVal++; //increase
-					LCD.drawString("x: " + xVal, 2, 1);
+					LCD.drawString("- x: " + xVal, 0, 1);
 				}
 				else if(which == 1) { //if we are currently editing y
 					LCD.clear(3);
 					yVal++; //increase
-					LCD.drawString("y: " + yVal, 2, 3);
+					LCD.drawString("- y: " + yVal, 0, 3);
 				}
 				else if(which == 2) { //if we are currently editing direction
 					LCD.clear(5);
@@ -82,19 +95,19 @@ public class RobotInterface {
 						d = 'N';
 						dir = Direction.NORTH;
 					}
-					LCD.drawString("Direction: " + d, 2, 5);
+					LCD.drawString("- Direction: " + d, 0, 5);
 				}
 			}
 			else if(pressed == Button.ID_LEFT) { //if the user is decreasing the value
 				if(which == 0) { //see above part of if statement
 					LCD.clear(1);
 					xVal--;
-					LCD.drawString("x: " + xVal, 2, 1);
+					LCD.drawString("- x: " + xVal, 0, 1);
 				}
 				else if(which == 1) {
 					LCD.clear(3);
 					yVal--;
-					LCD.drawString("y: " + yVal, 2, 3);
+					LCD.drawString("- y: " + yVal, 0, 3);
 				}
 				else if(which == 2) {
 					LCD.clear(5);
@@ -114,14 +127,38 @@ public class RobotInterface {
 						d = 'S';
 						dir = Direction.SOUTH;
 					}
-					LCD.drawString("Direction: " + d, 2, 5);
+					LCD.drawString("- Direction: " + d, 0, 5);
 				}
 			}
 			else if(pressed == Button.ID_ENTER) { //if the information is being confirmed
 				which++; //move onto the next detail
+				if(which == 1) {
+					LCD.clear(1);
+					LCD.drawString("x: " + xVal, 2, 1);
+					LCD.clear(3);
+					LCD.drawString("- y: " + yVal, 0, 3);
+				}
+				else if (which == 2) {
+					LCD.clear(3);
+					LCD.drawString("y: " + yVal, 2, 3);
+					LCD.clear(5);
+					LCD.drawString("- Direction: " + d, 0, 5);
+				}
 			}
 			else { //if we want to edit the previous information
 				which--; //move to the previous detail
+				if(which == 0) {
+					LCD.clear(3);
+					LCD.drawString("y: " + yVal, 2, 3);
+					LCD.clear(1);
+					LCD.drawString("- x: " + xVal, 0, 1);
+				}
+				else if (which == 1) {
+					LCD.clear(3);
+					LCD.drawString("- y: " + yVal, 0, 3);
+					LCD.clear(5);
+					LCD.drawString("Direction: " + d, 2, 5);
+				}
 			}
 		}
 		LCD.clear();
@@ -149,48 +186,48 @@ public class RobotInterface {
 	 * @param where
 	 */
 	private void dropoff(DropOffPoint where) {
-		ArrayList<String> buffer = new ArrayList<String>();
-		Button.RIGHT.addButtonListener(new ButtonListener() {
-			int x = 2;				//when the scroll is pressed
-			@Override
-			public void buttonPressed(Button b) {
-				if(!buffer.isEmpty()) {	//if the array list is non-empty
-					LCD.scroll(); //scroll
-					if(buffer.get(0).equals("Press ENTER")) { //formatting
-						x++;
-					}
-					LCD.drawString(buffer.get(0), x, 7); //add next line from buffer to bottom
-					buffer.remove(0); //pop the item off the top
-				}
-			}
-			@Override
-			public void buttonReleased(Button b) {
-				//
-			}
-		});
+//		ArrayList<String> buffer = new ArrayList<String>();
+//		Button.RIGHT.addButtonListener(new ButtonListener() {
+//			int x = 2;				//when the scroll is pressed
+//			@Override
+//			public void buttonPressed(Button b) {
+//				if(!buffer.isEmpty()) {	//if the array list is non-empty
+//					LCD.scroll(); //scroll
+//					if(buffer.get(0).equals("Press ENTER")) { //formatting
+//						x++;
+//					}
+//					LCD.drawString(buffer.get(0), x, 7); //add next line from buffer to bottom
+//					buffer.remove(0); //pop the item off the top
+//				}
+//			}
+//			@Override
+//			public void buttonReleased(Button b) {
+//				//
+//			}
+//		});
 		LCD.clear();
 		LCD.drawString("DP => drop off", 0, 0); //testing
 		boolean correct = confirm(where.getX(), where.getY());
 		if(correct) { //if the location is correct
-			LCD.drawString("I have:", 1, 0);
-			int y = 1;
-			for(String t : itemsHeld) {
-				if(y <= 7) { //if it can fit on the display
-					LCD.drawString(t, 2, y); //Display a single quantity of items held
-				}
-				else { //otherwise, add to buffer
-					buffer.add(t);
-				}
-				y++;
-			}
-			if(y <= 6) { //if instructions can also fit on the screen
-				LCD.drawString("Press ENTER", 3, 6);  //Display instructions
-				LCD.drawString("to drop-off", 3, 7);
-			}
-			else { //otherwise add them separately to buffer
-				buffer.add("Press ENTER");
-				buffer.add("to drop-off");
-			}
+//			LCD.drawString("I have:", 1, 0);
+//			int y = 1;
+//			for(String t : itemsHeld) {
+//				if(y <= 7) { //if it can fit on the display
+//					LCD.drawString(t, 2, y); //Display a single quantity of items held
+//				}
+//				else { //otherwise, add to buffer
+//					buffer.add(t);
+//				}
+//				y++;
+//			}
+//			if(y <= 6) { //if instructions can also fit on the screen
+			LCD.drawString("Press ENTER", 3, 3);  //Display instructions
+			LCD.drawString("to drop-off", 3, 4);
+//			}
+//			else { //otherwise add them separately to buffer
+//				buffer.add("Press ENTER");
+//				buffer.add("to drop-off");
+//			}
 			int pressed = Button.waitForAnyPress(); //Record the pressed button
 			while(pressed != Button.ID_ENTER) {		//if it isn't enter
 				pressed = Button.waitForAnyPress();	//keep waiting, until enter is pressed
@@ -198,9 +235,9 @@ public class RobotInterface {
 			CompleteReport report = new CompleteReport(false, true, false);
 			ClientSender.send(report);
 			LCD.clear();
-			while(!itemsHeld.isEmpty()) {
-				itemsHeld.remove(0);
-			}
+//			while(!itemsHeld.isEmpty()) {
+//				itemsHeld.remove(0);
+//			}
 		}
 		else { //if the location isn't correct
 			getDetails();
@@ -246,7 +283,7 @@ public class RobotInterface {
 			LCD.clear();
 			CompleteReport report;
 			if(!cancelled) {
-				itemsHeld.add(quantity + "x " + id);
+//				itemsHeld.add(quantity + "x " + id);
 				report = new CompleteReport(true, true, false); //to add to CommandHolder
 			}
 			else {
@@ -269,6 +306,7 @@ public class RobotInterface {
 	 * @return true if the location is correct, false otherwise
 	 */
 	private boolean confirm(int x, int y) {
+		LCD.clear();
 		boolean confirmed = false;
 		boolean ySelected = true;
 		int pressed;
@@ -297,18 +335,19 @@ public class RobotInterface {
 	}
 
 	public static void main(String[] args) { //entirely used for testing
-		/*Button.waitForAnyPress();
-		CommandHolder h = new CommandHolder();
-		RobotInterface i = new RobotInterface("dshfjdshf");
-		Delay.msDelay(1000);
-		i.add(new SingleTask("aa", 5, new Point(1, 2)));
-		Delay.msDelay(1000);
-		i.add(new SingleTask("ac", 3, 6, 6));
-		Delay.msDelay(1000);
-		i.add(new SingleTask("ae", 4, 4, 2));
-		Delay.msDelay(1000);
-		i.add(new DropoffPoint(6, 2));*/
-		
+//		Button.waitForAnyPress();
+//		//CommandHolder h = new CommandHolder();
+//		RobotInterface i = new RobotInterface("dshfjdshf");
+//		i.getDetails();
+//		/*Delay.msDelay(1000);
+//		i.add(new SingleTask("aa", 5, new Point(1, 2)));
+//		Delay.msDelay(1000);
+//		i.add(new SingleTask("ac", 3, 6, 6));
+//		Delay.msDelay(1000);
+//		i.add(new SingleTask("ae", 4, 4, 2));
+//		Delay.msDelay(1000);
+//		i.add(new DropoffPoint(6, 2));*/
+//		
 	}
 
 }

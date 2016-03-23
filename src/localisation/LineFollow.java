@@ -30,7 +30,12 @@ public class LineFollow implements Behavior {
 
 	@Override
 	public boolean takeControl() {
-		return true;
+		if(Localisation.locs.size()<=1){
+			pilot.stop();
+		}
+		LCD.drawString("" + Localisation.locs.size(), 0, 3);
+		return Localisation.locs.size()>1;
+	
 	}
 	
 
@@ -55,14 +60,13 @@ public class LineFollow implements Behavior {
 
 	@Override
 	public void suppress() {
+		pilot.stop();
 		suppress = true;
 
 	}
 	
 	/**
 	 * Generates calibrated light values
-	 * On a black line = 45
-	 * Not on a black line = 35
 	 */
 	
 	private void generateLightValues(){
