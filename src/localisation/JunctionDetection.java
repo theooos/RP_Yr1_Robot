@@ -11,95 +11,90 @@ import lejos.util.Delay;
 
 /**
  * Behaviour for detecting junctions
+ * @authors Simeon Kostadinov and Lyubomir Pashev
  */
 public class JunctionDetection implements Behavior {
 	
-	private LightSensor left;
-	private LightSensor right;
-	private int leftValue;
-	private int rightValue;
-	private DifferentialPilot pilot;
+	/*
+	 * initialize fields
+	 */
+	private OpticalDistanceSensor ranger; // range sensor
+	private LightSensor left; // left sensor
+	private LightSensor right; // right sensor
+	private int leftValue; // value from the left sensor
+	private int rightValue; // value from the right sensor
+	private DifferentialPilot pilot; // the robot pilot
 	//Light value threshold
-	private int threshold;
+	private int threshold; // the light threshold
 	//Moves
-	private int NORTH = 0;
-	private int WEST = 1;
-	private int SOUTH = 2;
-	private int EAST = 3;
-	private int robotDirection = NORTH;
-	private float NORTH_DISTANCE;
+	private int NORTH = 0; // direction North
+	private int WEST = 1; // direction West
+	private int SOUTH = 2; // direction South
+	private int EAST = 3; // direction East
+	private int robotDirection = NORTH; // At the beginning the robotDirection is North
+	private float NORTH_DISTANCE; 
 	private float SOUTH_DISTANCE;
 	private float WEST_DISTANCE;
 	private float EAST_DISTANCE;
 	private float DISTANCE;
 	private boolean firstTime=false;
-	private float heading;
+	private float heading; // current heading of the robot
 	
-	//private ArrayList<PosProb> Localisation.locsArray;
-	private float cellSize = Localisation.locs.getCellSize();
+	private float cellSize = Localisation.locs.getCellSize(); // get the size of the cell
 	
-	private OpticalDistanceSensor ranger;
-	
+	/**
+	 * set the speed of the robot
+	 * @param pilot - the robot pilot
+	 * @param left - left sensor
+	 * @param right - right sensor
+	 * @param speed - speed of the robot
+	 * @param distanceSensor - range sensor
+	 * @param threshold - threshold for the light sensor
+	 */
 	public JunctionDetection(DifferentialPilot pilot, LightSensor left, LightSensor right, double speed, OpticalDistanceSensor distanceSensor, int threshold){
 		this.left=left;
 		this.right=right;
 		this.pilot=pilot;
 		this.ranger=distanceSensor;
 		this.threshold = threshold;
-		//this.Localisation.locsArray = Localisation.locsArray;
-		//Localisation.locs.setArray(this.Localisation.locsArray);
 		pilot.setTravelSpeed(speed);
 	}
-	/**	
-	 * Generates calibrated values
-	 * On a black line = 45
-	 * Not on a black line = 35			
-	 */	
-	
+
+	/**
+	 * take control of when detects a junction
+	 * @return - true if there is a junction and the array of coordinates has more than one element
+	 */
 	@Override
 	public boolean takeControl(){
 		
 		generateLightValues();
-		if((leftValue < threshold) && (rightValue < threshold) && Localisation.locs.size()>1){
-			return true;
-		}
-		
-		return false;
+		return (leftValue < threshold) && (rightValue < threshold) && Localisation.locs.size()>1;
 	}
 	
 
+	/**
+	 * Action of junction behaviour 
+	 * Rotates on 360 degrees when detects a junction and calculates the possible locations
+	 */
 	public void action() {
 		pilot.travel(0.1f);
-		//LCD.drawString(ranger.getRange() + " " + Localisation.locs.getCellSize() , 0, 6);
-		if(!firstTime || ranger.getRange()<Localisation.locs.getCellSize()){
+		if(!firstTime || ranger.getRange()<cellSize){
 			
 			for(int i=0;i<4;i++){
-				
-				//LCD.clear();
-				//LCD.drawString(+ Localisation.locs.size() + "      " + ranger.getRange(), 0, 7);
-				if(checkEnd(Localisation.locs.size()))
+				if(checkEnd(Localisation.locs.size())) //check if a location is found and ends the behaviour
 					return;
 				executeMove(RotationDirections.LEFT);
 				Delay.msDelay(1000);
-//				if(Localisation.locs.size() < 7){
-//							
-			}for(int i1 = 0; i1 < Localisation.locs.size(); i1++){
-//						//LCD.drawString(Localisation.locs.getPoints(i1).getxCoord() + " " + Localisation.locs.getPoints(i1).getyCoord(), 0, i1+1);
-//					}
-//				}
-//				Delay.msDelay(3000);
 				
 			}
-			//pilot.stop();
-			
 			firstTime = true;
 		}
 		
-		if(checkEnd(Localisation.locs.size()))
+		if(checkEnd(Localisation.locs.size())) //check if a location is found and ends the behaviour
 			return;
 		
-		if(ranger.getRange()<Localisation.locs.getCellSize()){
-			//LCD.drawString("I am in with: " + ranger.getRange() , 0, 0);
+		// make a decision where to turn when sees a wall
+		if(ranger.getRange()<cellSize){
 			if(heading == 90){
 				turnDecision(WEST_DISTANCE, EAST_DISTANCE);
 					
@@ -115,40 +110,53 @@ public class JunctionDetection implements Behavior {
 			 
 		}else{
 			executeMove(RotationDirections.FORWARD);
-			Localisation.locs.updateLocations(heading);
+			Localisation.locs.updateLocations(heading); // update the current probable locations while moving
 		}
 		
-		if(checkEnd(Localisation.locs.size()))
+		if(checkEnd(Localisation.locs.size())) //check if a location is found and ends the behaviour
 			return;
+		
 		LCD.clear();
 		LCD.drawString("" + Localisation.locs.size(), 0, 7);
-		Delay.msDelay(1000);
+		
+		Delay.msDelay(100);
 	}
 
+	/**
+	 * The junction behaviour is ended when the size of the array is less than or equal to 1 so the suppress method is empty
+	 */
 	@Override
 	public void suppress() {
 		
 	}
 	
-	//Turns left
-		private void moveLeft(){
-			pilot.rotate(126);
-		}
-		//Turns right
-		private void moveRight(){
-			pilot.rotate(-126);			
-		}
-		//Continues going forward
-		private void moveForward(){
-			pilot.forward();
-		}
-		
+	/**
+	 * Helper methods
+	 */
 	
+	//Turns left
+	private void moveLeft(){
+		pilot.rotate(126);
+	}
+	//Turns right
+	private void moveRight(){
+		pilot.rotate(-126);			
+	}
+	//Continues going forward
+	private void moveForward(){
+		pilot.forward();
+	}
+		
+	// generates the values of the light sensors
 	private void generateLightValues(){
 		leftValue = left.getLightValue();
 		rightValue = right.getLightValue();
 	}
 	
+	/**
+	 * Rotates the robot on 360 degrees and calculates the distances on each rotation
+	 * @param move - turn left or right
+	 */
 	private void executeMove(int move){
 		setDirections();
 		//LCD.drawString(DISTANCE + " ", 0, testCount);
@@ -175,6 +183,11 @@ public class JunctionDetection implements Behavior {
 		
 	}
 	
+	/**
+	 * Make a decision where to turn when sees a wall 
+	 * @param leftPosition - which direction is on the left of the robot
+	 * @param rightPosition - which direction is on the right of the robot
+	 */
 	private void turnDecision(float leftPosition, float rightPosition){
 		if(leftPosition > cellSize && rightPosition > cellSize){ 
 			if(leftPosition < rightPosition){
@@ -195,10 +208,11 @@ public class JunctionDetection implements Behavior {
 			executeMove(RotationDirections.LEFT);
 			Localisation.locs.updateLocations(heading);
 		}
-		//LCD.clear();
-		//LCD.drawString("h: " + heading, 0, 0);
 	}
 	
+	/**
+	 * Sets the heading and the distance when the robot is facing different directions
+	 */
 	private void setDirections(){
 		if(robotDirection==NORTH){
 			heading = 90;
@@ -222,15 +236,19 @@ public class JunctionDetection implements Behavior {
 		}
 	}
 	
+	/**
+	 * Check if the task is complete
+	 * @param size - size of the array
+	 * @return - true if the size of the array is less than or equal to 1
+	 */
 	private boolean checkEnd(int size){
-		//LCD.drawString(Localisation.locs.getPoints(0).getxCoord() + " " + Localisation.locs.getPoints(0).getyCoord(), 0, 4);
 		return size <= 1;
 	}
 	
-	public ProbableLocations getlocs(){
-		return Localisation.locs;
-	}
-	
+	/**
+	 * Called when the robot finds the location
+	 * @return - the direction of the robot when it finds its location
+	 */
 	public Direction getDir(){
 		if(robotDirection==NORTH)
 			return Direction.NORTH;

@@ -4,24 +4,41 @@ import java.util.ArrayList;
 
 import rp.robotics.mapping.GridMap;
 
+/**
+ * Calculates the possible locations
+ * @author Simeon Kostadinov
+ *
+ */
 public class ProbableLocations {
 
-	private GridMap map;
-	private float coordRange;
-	private float cellSize;
-	private float beginningRange;
-	private float appropriateRange;
-	private float doubleCellRange;
+	// initialize fields
+	private GridMap map; // the map
+	private float coordRange; // the range got form the map
+	private float cellSize; // the size of the cell
+	private float beginningRange; // first range (smaller)
+	private float appropriateRange; // second range (medium)
+	private float doubleCellRange; // third range (highest)
 	
-	private final float cameraWheelsDistance = 2.0f;
-	private final float zeroProbability = 0;
+	private final float cameraWheelsDistance = 2.0f; // the distance between the camera and the wheels
+	// probabilities calculated after gathering test data
+	private final float zeroProbability = 0; 
 	private final float fullProbability = 1;
 	private final float probabilitySmall = 0.20f;
 	private final float probabilityBig = 0.80f;
 	
+	// array to store the locations
 	private ArrayList<PosProb> locs = new ArrayList<PosProb>();
+	// helper array
 	private ArrayList<PosProb> newLocs = new ArrayList<PosProb>();
 	
+	/**
+	 * cellSize
+	 * beginningRange - the cell size
+	 * appropriateRange - threshold decided after testing data
+	 * doubleCellSize - twice the cell size
+	 * fill the array with all possible locations
+	 * @param map
+	 */
 	public ProbableLocations(GridMap map){
 		this.map=map;
 		this.cellSize = map.getCellSize()*100;
@@ -40,14 +57,22 @@ public class ProbableLocations {
 		}
 	}
 	
-	public void setLocations(float heading,float range){
+	/**
+	 * Decides the probability of all possible locations from the range sensor data
+	 * @param heading - where the robot is facing
+	 * @param range - the range that the sensor gives
+	 */
+	public void setLocations(float heading, float range){
 		//range = range + cameraWheelsDistance;
 		
 		for(int p = 0; p < locs.size(); p++){
 			int i = (int)locs.get(p).getxCoord();
 			int j = (int)locs.get(p).getyCoord();
-			coordRange=map.rangeToObstacleFromGridPosition(i, j, heading)*100;
+			coordRange=map.rangeToObstacleFromGridPosition(i, j, heading)*100; // get the actual range from the map
 				
+			/*
+			 * separate the conditions depending on the distance given by the sensor and the actual distance
+			 */
 				if(range <= beginningRange){
 					if(coordRange <= beginningRange){
 //						float newProbability = 1;
@@ -106,12 +131,21 @@ public class ProbableLocations {
 				}
 			}
 		
+		// removes the positions with 0 probability
 		removeInvalid();
 		
+		// normalise the other locations
 		normalise();			
 				
 	}
 	
+	/*
+	 * Helper methods
+	 */
+	
+	/**
+	 * Updates the helper array
+	 */
 	private void newArrayUpdate(){
 		newLocs.clear();
 		for(int q = 0; q < locs.size(); q++){
@@ -119,6 +153,9 @@ public class ProbableLocations {
 		}
 	}
 	
+	/**
+	 * removes locations with 0 probability or that are obstructed
+	 */
 	private void removeInvalid(){
 		
 		newArrayUpdate();
@@ -131,9 +168,6 @@ public class ProbableLocations {
 				
 				PosProb pos = newLocs.get(q);
 				locs.remove(pos);
-
-				//System.out.println("********i = " + i + "; j = " + j + " coordRange: " + coordRange );
-				//System.out.println("locs size: " + locs.size() + " newLocs size: " + newLocs.size());
 			}
 		}
 	}
@@ -150,6 +184,10 @@ public class ProbableLocations {
 		return locs.size();
 	}
 	
+	/**
+	 * Count the size of the array
+	 * @return - the initial number of elements in the array
+	 */
 	public int initialSize(){
 		int count = 0;
 		for(int i=0;i<=map.getXSize();i++){
@@ -168,6 +206,9 @@ public class ProbableLocations {
 		return newLocs.size();
 	}
 	
+	/**
+	 * Normalise the probabilities of the locations 
+	 */
 	private void normalise(){
 		float total = sumProbabilities();
 		
@@ -179,6 +220,10 @@ public class ProbableLocations {
 		}
 	}
 	
+	/**
+	 * Sum all the probabilities
+	 * @return - sum of the probabilities
+	 */
 	private float sumProbabilities(){
 		float total = 0;
 		for(int i = 0 ; i < locs.size(); i++){
@@ -190,11 +235,20 @@ public class ProbableLocations {
 		return total;
 	}
 	
+	/**
+	 * Sets new probability after receiving new information 
+	 * @param p - the current element 
+	 * @param newProbability - the new probability
+	 */
 	private void newProbability(int p, float newProbability){
 		float oldProbability = locs.get(p).getProbability();
 		locs.get(p).setProbability(newProbability*oldProbability);
 	}
 	
+	/**
+	 * Update the locations of the robot when it is moving
+	 * @param heading - the heading that the robot is moving with
+	 */
 	public void updateLocations(float heading){
 		if(heading==180)
 			for(int i=0;i<locs.size();i++){
